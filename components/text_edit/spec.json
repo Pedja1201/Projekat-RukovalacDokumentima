@@ -1,0 +1,11 @@
+{
+    "version" : "1.0.0",
+    "app_version" : "1.0.0",
+    "author" : "Predrag Radak",
+    "description" : "Opis primera radi",
+    "creation_date" : null,
+    "last_update_date" : null,
+    "licence" : "Tekst licence",
+    "name" : "TeXt edit",
+    "development_status" : "Unfinished"
+}
