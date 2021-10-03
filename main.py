@@ -1,20 +1,21 @@
-import json
-from datetime import datetime
-from component_framework.component import Component
-from component_framework.component_specification import ComponentSpecification
+import sys
+from PySide2 import QtWidgets
+from core.view.main_window import MainWindow
+from component_framework.component_framework import ComponentFramework
 
-class Main(Component):
-    def __init__(self, actions, menu, toolbar, widget, specification):
-        super().__init__(actions, menu, toolbar, widget, specification)
-        if self.specification is None:
-            self._load_specification("components/text_edit/spec.json")
+def main():
+    # Pravljenje komponentnog okruzenja
+    component_framework = ComponentFramework()
+    component_framework.install_components()
+    # Kreiranje aplikacije
+    app = QtWidgets.QApplication(sys.argv)
+    # Kreiranje glavnog prozora
+    main_window = MainWindow()
+    # Prikazivanje - obavezno
+    main_window.show()
+    # Iskljucivanje interpretera zajedno sa iskljucivanjem aplikacije
+    sys.exit(app.exec_())
 
-    # TODO: dodati metode specificne za komponentu
-    def _load_specification(self, path):
-        # FIXME: sta ako putanja ne postoji (nedostaje datoteka) os.path.exists
-        with open(path, "r", encoding="utf-8") as jsonfile:
-            data = json.load(jsonfile)
-            self.specification = ComponentSpecification(data["version"], data["app_version"], data["author"],
-                data["description"], datetime.strptime(data["creation_date"]), datetime.strptime(data["last_update_date"]),
-                data["licence"], data["name"], data["development_status"])
-
+# Pokretanje aplikacije samo ako je pokrenut glavni modul
+if __name__ == "__main__":
+    main()

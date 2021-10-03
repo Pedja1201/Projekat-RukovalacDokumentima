@@ -13,22 +13,32 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Podesavanje prozora
-        self.setWindowTitle("Rukovalac dokumentima")
+        self.setWindowTitle("Rukovalac dokumentima Singidunum")
         self.setWindowIcon(QtGui.QIcon("resources/icons/icons8-product-documents-32.png"))
         self.resize(640, 480)
 
         # Definisanje delova aplikacije
         self.menubar = QtWidgets.QMenuBar(self)
+        self.file_menu = QtWidgets.QMenu("File")
+        self.edit_menu = QtWidgets.QMenu("Edit")
+        self.window_menu = QtWidgets.QMenu("Window")
         self.help_menu = QtWidgets.QMenu("Help")
         self.toolbar = QtWidgets.QToolBar(self)
         self.central_widget = QtWidgets.QTabWidget(self)
         self.statusbar = QtWidgets.QStatusBar(self)
+        self.statusbar.showMessage("Status Bar is Ready!")
         self.project_dock = QtWidgets.QDockWidget(self)
 
         # Akcije menija
         # TODO: Dodati i ostale akcije
         self.menu_actions = {
-            "about": QtWidgets.QAction("About", self.help_menu)
+            "Open": QtWidgets.QAction(QtGui.QIcon("resources/icons/create_file.png"), "&Open"),
+            "Save": QtWidgets.QAction(QtGui.QIcon("resources/icons/save.png"), "&Save"),
+            "Undo": QtWidgets.QAction(QtGui.QIcon("resources/icons/undo.png"), "&Undo"),
+            "Copy": QtWidgets.QAction(QtGui.QIcon("resources/icons/copy.png"), "&Copy"),
+            "Paste": QtWidgets.QAction(QtGui.QIcon("resources/icons/paste.png"), "&Paste"),
+            "Close": QtWidgets.QAction(QtGui.QIcon("resources/icons/end.png"), "&Close"),
+            "about": QtWidgets.QAction(QtGui.QIcon("resources/icons/search.png"), "&About"),
         }
 
         # Dodavanje elemenata na glavni prozor
@@ -38,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         Kreiranje jednog dokumenta za testiranje modela i view-a.
         """
-        document = Document("test", "Aleksandra")
+        document = Document("test", "Predrag")
         page1 = Page("Modeli podataka", "Kreiranje modela na osnovu QAbstractItemModel-a")
         page2 = Page("State obrazac", "Primer i primena state obrasca", 2)
         document.add_child(page1)
@@ -104,6 +114,19 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         Privatna metoda koja smesta menije u meni bar.
         """
+
+        self.file_menu.addAction(self.menu_actions["Open"])
+        self.file_menu.addAction(self.menu_actions["Save"])
+        self.menubar.addMenu(self.file_menu)
+
+        self.edit_menu.addAction(self.menu_actions["Undo"])
+        self.edit_menu.addAction(self.menu_actions["Copy"])
+        self.edit_menu.addAction(self.menu_actions["Paste"])
+        self.menubar.addMenu(self.edit_menu)
+
+        self.window_menu.addAction(self.menu_actions["Close"])
+        self.menubar.addMenu(self.window_menu)
+
         self.help_menu.addAction(self.menu_actions["about"])
         self.menubar.addMenu(self.help_menu)
 
@@ -127,7 +150,8 @@ class MainWindow(QtWidgets.QMainWindow):
         Metoda koja prikazuje informacioni dijalog korisniku o aplikaciji.
         """
         msg = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Information, "About Rukovalac dokumentima", 
-                        "Autori: Studenti Univerziteta Singidunum, Centar Novi Sad.\nMentor: Aleksandra Mitrović\
-                            \nPredmetni profesor: Branko Perišić", parent = self)
+                        "Autori: Studenti Univerziteta Singidunum, Centar Novi Sad.", parent = self)
         msg.addButton(QtWidgets.QMessageBox.Ok)
-        msg.exec_()
+
+    
+
