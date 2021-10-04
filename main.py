@@ -1,7 +1,7 @@
 import sys
 from PySide2 import QtWidgets
-from core.view.main_window import MainWindow
-from component_framework.component_framework import ComponentFramework
+from gui.view.main_window import MainWindow
+from plugin_framework.component_framework import ComponentFramework
 
 def main():
     # Pravljenje komponentnog okruzenja

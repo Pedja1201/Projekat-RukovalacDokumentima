@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
-from component_framework.component import Component
-from component_framework.component_specification import ComponentSpecification
+from plugin_framework.component import Component
+from plugin_framework.component_specification import ComponentSpecification
 
 class Main(Component):
     def __init__(self, actions, menu, toolbar, widget, specification):

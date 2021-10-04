@@ -15,7 +15,7 @@ class ComponentFramework:
         # FIXME: sta ako nema te komponente u listi?
         self.components.remove(component)
 
-    def install_components(self, path="components"):
+    def install_components(self, path="plugins"):
         """
         Sve komponente nalaze u components folderu, svaka ima svoj zaseban folder, a unjemu
         obavezno main.py i spec.EXTENZIJA (bilo koji format datoteke)

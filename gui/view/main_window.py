@@ -61,6 +61,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def _populate_main_window(self):
         # populisanje menija
         self._populate_menus()
+        # populisanje ToolBar
+        self._populate_toolbar()
         # postavljanje widgeta na window
         self.setMenuBar(self.menubar)
         self.addToolBar(self.toolbar)
@@ -77,10 +79,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def _populate_project_dock(self):
         self.project_dock.setWidget(QtWidgets.QTreeView(self.project_dock))
         # TODO: Primer za file system sadrzaj
-        # model = QtWidgets.QFileSystemModel()
-        # model.setRootPath(QtCore.QDir.currentPath())
-        # self.project_dock.widget().setModel(model)
-        # self.project_dock.widget().setRootIndex(model.index(QtCore.QDir.currentPath()))
+        model = QtWidgets.QFileSystemModel()
+        model.setRootPath(QtCore.QDir.currentPath())
+        self.project_dock.widget().setModel(model)
+        self.project_dock.widget().setRootIndex(model.index(QtCore.QDir.currentPath()))
 
         # primer dokument modela
         self.project_dock.widget().setModel(self.central_widget.widget(0).model())
@@ -129,6 +131,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.help_menu.addAction(self.menu_actions["about"])
         self.menubar.addMenu(self.help_menu)
+
+    def _populate_toolbar(self):
+        file = QtGui.QIcon("resources/icons/file.png")
+        self.toolbar.addAction(file, "New file")
+        save = QtGui.QIcon("resources/icons/save.png")
+        self.toolbar.addAction(save, "Save")
+        undo = QtGui.QIcon("resources/icons/undo.png")
+        self.toolbar.addAction(undo, "Undo")
+        delete = QtGui.QIcon("resources/icons/delete.png")
+        self.toolbar.addAction(delete, "Delete")
 
     def _set_models(self, models=[]):
         """

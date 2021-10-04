@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from component_framework.component_interface import ComponentInterface
-from component_framework.component_specification import ComponentSpecification
+from plugin_framework.component_interface import ComponentInterface
+from plugin_framework.component_specification import ComponentSpecification
 from PySide2.QtWidgets import QMenu, QToolBar, QWidget
 
 
