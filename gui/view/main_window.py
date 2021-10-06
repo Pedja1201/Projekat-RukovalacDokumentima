@@ -27,7 +27,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget = QtWidgets.QTabWidget(self)
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
-        self.project_dock = QtWidgets.QDockWidget(self)
+        self.project_dock = QtWidgets.QDockWidget("Struktura dokumenta",self)
 
         # Akcije menija
         # TODO: Dodati i ostale akcije
@@ -127,7 +127,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menubar.addMenu(self.edit_menu)
 
         self.window_menu.addAction(self.menu_actions["Close"])
+        toggle_structure_dock_action = self.project_dock.toggleViewAction()
         self.menubar.addMenu(self.window_menu)
+        self.window_menu.addAction(toggle_structure_dock_action)
 
         self.help_menu.addAction(self.menu_actions["about"])
         self.menubar.addMenu(self.help_menu)

@@ -7,7 +7,7 @@ class Main(Component):
     def __init__(self, actions, menu, toolbar, widget, specification):
         super().__init__(actions, menu, toolbar, widget, specification)
         if self.specification is None:
-            self._load_specification("components/text_edit/spec.json")
+            self._load_specification("plugins/text_edit/spec.json")
 
     # TODO: dodati metode specificne za komponentu
     def _load_specification(self, path):
