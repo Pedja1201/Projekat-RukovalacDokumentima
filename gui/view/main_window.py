@@ -24,7 +24,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.window_menu = QtWidgets.QMenu("Window")
         self.help_menu = QtWidgets.QMenu("Help")
         self.toolbar = QtWidgets.QToolBar(self)
-        self.central_widget = QtWidgets.QTabWidget(self)
+        self.central_widget = QtWidgets.QTextEdit(self)
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
         self.project_dock = QtWidgets.QDockWidget("Struktura dokumenta",self)
@@ -44,18 +44,18 @@ class MainWindow(QtWidgets.QMainWindow):
         # Dodavanje elemenata na glavni prozor
         self._populate_main_window()
 
-    def _dummy_document(self):
-        """
-        Kreiranje jednog dokumenta za testiranje modela i view-a.
-        """
-        document = Document("test", "Predrag")
-        page1 = Page("Modeli podataka", "Kreiranje modela na osnovu QAbstractItemModel-a")
-        page2 = Page("State obrazac", "Primer i primena state obrasca", 2)
-        document.add_child(page1)
-        document.add_child(page2)
+    # def _dummy_document(self):
+    #     """
+    #     Kreiranje jednog dokumenta za testiranje modela i view-a.
+    #     """
+    #     document = Document("test", "Predrag")
+    #     page1 = Page("Modeli podataka", "Kreiranje modela na osnovu QAbstractItemModel-a")
+    #     page2 = Page("State obrazac", "Primer i primena state obrasca", 2)
+    #     document.add_child(page1)
+    #     document.add_child(page2)
 
-        document_model = DocumentModel(document)
-        return document_model
+    #     document_model = DocumentModel(document)
+    #     return document_model
         
 
     def _populate_main_window(self):
@@ -67,7 +67,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setMenuBar(self.menubar)
         self.addToolBar(self.toolbar)
         # populisanje tabova u centralnom widgetu
-        self._populate_tab_widget()
+        self._populate_text_widget()
         # postavljanje dock widgeta (mozemo ih imati proizvoljan broj)
         self._populate_project_dock()
         self.setCentralWidget(self.central_widget)
@@ -85,32 +85,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.project_dock.widget().setRootIndex(model.index(QtCore.QDir.currentPath()))
 
         # primer dokument modela
-        self.project_dock.widget().setModel(self.central_widget.widget(0).model())
+        # self.project_dock.widget().setModel(self.central_widget.widget(0).model())
 
-    def _populate_tab_widget(self):
+    def _populate_text_widget(self):
         """
             Populisati prilikom ucitavanja konteksta, kreirati sve tabove koji su bili otvoreni
             sa widgetima. Podesiti modele za svaki ucitani widget.
 
         """
-        # dodavanje ponasanja
-        self.central_widget.setTabsClosable(True)
-        # populisanje
-        # na osnovu liste modela se moze kreirati broj tabova
-        data_table = QtWidgets.QTableView(self.central_widget)
-        self.central_widget.addTab(data_table, QtGui.QIcon("resources/icons/icons8-grid-2-64.png"),
-            "Document data table1")
-        data_table = QtWidgets.QTableView(self.central_widget)
-        self.central_widget.addTab(data_table, QtGui.QIcon("resources/icons/icons8-grid-2-64.png"),
-            "Document data table2")
-        data_table = QtWidgets.QTableView(self.central_widget)
-        self.central_widget.addTab(data_table, QtGui.QIcon("resources/icons/icons8-grid-2-64.png"),
-            "Document data table3")
-
-        # postavljanje modela u widget-e iz tabova
-        self._set_models([self._dummy_document(), self._dummy_document(), self._dummy_document()])
-
-        self.central_widget.tabCloseRequested.connect(lambda i: self.central_widget.removeTab(i))
+        text_editor_wgt = QtWidgets.QTextEdit(self)
+        self.setCentralWidget(text_editor_wgt)
+    
 
     def _populate_menus(self):
         """
