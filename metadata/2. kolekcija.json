@@ -1,0 +1,9 @@
+{
+      "name": "2. kolekcija",
+      "parent": "Workspace",
+      "title": "Collection",
+      "elements": [
+            "1. kolekcija",
+            "2. Dokument"
+      ]
+}

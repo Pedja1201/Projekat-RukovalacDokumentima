@@ -1,0 +1,9 @@
+{
+      "name": "1. page",
+      "parent": "1. page",
+      "title": "Slot",
+      "elements": [
+            "1. page",
+            "2. Slot"
+      ]
+}

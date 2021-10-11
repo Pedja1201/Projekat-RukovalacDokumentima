@@ -1,0 +1,12 @@
+{
+      "name": "Slot",
+      "parent": "Page",
+      "title": "Slot",
+      "elements": [
+            "1. Video",
+            "1. Text",
+            "1. Table",
+            "1. Image",
+            "2. Image"
+      ]
+}
