@@ -1,5 +1,6 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog
+from ..view.strukture_dock import StructureDock
 from ..model.document_model import DocumentModel
 from ..model.document import Document
 from ..model.page import Page
@@ -25,12 +26,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.edit_menu = QtWidgets.QMenu("Edit")
         self.window_menu = QtWidgets.QMenu("Window")
         self.help_menu = QtWidgets.QMenu("Help")
-        self.toolbar = QtWidgets.QToolBar(self)
-        self.toolbar1 = QtWidgets.QToolBar(self)
+        self.toolbar = QtWidgets.QToolBar("Toolbar", self)
+        self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
         self.central_widget = QtWidgets.QTextEdit(self)
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
-        self.project_dock = QtWidgets.QDockWidget("Struktura dokumenta", self)
+        # self.project_dock = QtWidgets.QDockWidget("Struktura dokumenta", self)
+        self.project_dock = StructureDock("Struktura dokumenta", self)
 
         # Akcije menija
         # TODO: Dodati i ostale akcije
@@ -42,8 +44,9 @@ class MainWindow(QtWidgets.QMainWindow):
             "Copy": QtWidgets.QAction(QtGui.QIcon("resources/icons/copy.png"), "&Copy"),
             "Paste": QtWidgets.QAction(QtGui.QIcon("resources/icons/paste.png"), "&Paste"),
             "Close": QtWidgets.QAction(QtGui.QIcon("resources/icons/end.png"), "&Close"),
-            "about": QtWidgets.QAction(QtGui.QIcon("resources/icons/search.png"), "&About"),
+            "about": QtWidgets.QAction(QtGui.QIcon("resources/icons/about.png"), "&About"),
         }
+        #Akcije toolbara
         self.tool_actions = {
             "New file": QtWidgets.QAction(QtGui.QIcon("resources/icons/file.png"), "&New file"),
             "Save": QtWidgets.QAction(QtGui.QIcon("resources/icons/save.png"), "&Save"),
@@ -54,20 +57,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # Dodavanje elemenata na glavni prozor
         self._populate_main_window()
 
-    # def _dummy_document(self):
-    #     """
-    #     Kreiranje jednog dokumenta za testiranje modela i view-a.
-    #     """
-    #     document = Document("test", "Predrag")
-    #     page1 = Page("Modeli podataka", "Kreiranje modela na osnovu QAbstractItemModel-a")
-    #     page2 = Page("State obrazac", "Primer i primena state obrasca", 2)
-    #     document.add_child(page1)
-    #     document.add_child(page2)
-
-    #     document_model = DocumentModel(document)
-    #     return document_model
-        
-
     def _populate_main_window(self):
         # populisanje menija
         self._populate_menus()
@@ -75,7 +64,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # postavljanje widgeta na window
         self.setMenuBar(self.menubar)
         self.addToolBar(self.toolbar)
-        self.addToolBar(QtCore.Qt.RightToolBarArea, self.toolbar1)
+        self.addToolBar(QtCore.Qt.RightToolBarArea, self.toolbar1)##Primer za drugi toolbar sa desne strane
 
         # populisanje textWidgeta u centralnom widgetu
         self._populate_text_widget()
@@ -86,17 +75,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
         # uvezivanje akcija
         self._bind_actions()
+        self._bind_shortcuts()
 
     def _populate_project_dock(self):
-        self.project_dock.setWidget(QtWidgets.QTreeView(self.project_dock))
-        # TODO: Primer za file system sadrzaj
-        model = QtWidgets.QFileSystemModel()
-        model.setRootPath(QtCore.QDir.currentPath())
-        self.project_dock.widget().setModel(model)
-        self.project_dock.widget().setRootIndex(model.index(QtCore.QDir.currentPath()))
+        self.project_dock.tree.clicked.connect(self.read_file)
+    #     self.project_dock.setWidget(QtWidgets.QTreeView(self.project_dock))
+    #     # TODO: Primer za file system sadrzaj
+    #     model = QtWidgets.QFileSystemModel()
+    #     model.setRootPath(QtCore.QDir.currentPath())
+    #     self.project_dock.widget().setModel(model)
+    #     self.project_dock.widget().setRootIndex(model.index(QtCore.QDir.currentPath()))
 
-        # primer dokument modela
-        # self.project_dock.widget().setModel(self.central_widget.widget(0).model())
+    #FIXME: Najveci problem-Ucitavanje dokumenta iz struk
+    def read_file(self, index):
+        path = self.project_dock.model.filePath(index)
+        with open(path) as f:
+            text = (f.read())
+            new_workspace = QtWidgets.QWidget(self.central_widget)
+            self.central_widget.setText(new_workspace, path.split("/")[-1])
+            new_workspace.show_text(text)
 
     def _populate_text_widget(self):
         """
@@ -124,16 +121,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.window_menu.addAction(self.menu_actions["Close"])
         toggle_structure_dock_action = self.project_dock.toggleViewAction()
+        toggle_toolbar_action = self.toolbar.toggleViewAction()
         self.menubar.addMenu(self.window_menu)
         self.window_menu.addAction(toggle_structure_dock_action)
+        self.window_menu.addAction(toggle_toolbar_action)
 
         self.help_menu.addAction(self.menu_actions["about"])
         self.menubar.addMenu(self.help_menu)
 
     def _populate_toolbar(self):
         self.toolbar.addAction(self.tool_actions["New file"])
+        self.toolbar.addSeparator()
         self.toolbar.addAction(self.tool_actions["Save"])
+        self.toolbar.addSeparator()
         self.toolbar.addAction(self.tool_actions["Undo"])
+        self.toolbar.addSeparator()
         self.toolbar.addAction(self.tool_actions["Delete"])
 
         self.toolbar1.addAction(self.menu_actions["about"])
@@ -153,14 +155,24 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         self.menu_actions["about"].triggered.connect(self.about_action)
         self.menu_actions["Open"].triggered.connect(self.on_open)##Pedja dodao
-        self.menu_actions["Open"].setShortcut('Ctrl+O')
+        self.menu_actions["Undo"].triggered.connect(self.central_widget.undo)
+
         self.tool_actions["New file"].triggered.connect(self.on_open)##Pedja dodao
+        self.tool_actions["Undo"].triggered.connect(self.central_widget.undo)
+        self.tool_actions["Delete"].triggered.connect(self.central_widget.deleteLater) #Pedja
 
         self.menu_actions["Close"].triggered.connect(self.button_close) #Pedja
-        self.menu_actions["Close"].setShortcut('Ctrl+Q')
         self.menu_actions["Print"].triggered.connect(self.print) #Pedja
-        self.menu_actions["Print"].setShortcut('Ctrl+P')
 
+        self.menu_actions["Save"].triggered.connect(self.file_save) #Pedja
+
+
+    def _bind_shortcuts(self):
+        self.menu_actions["Open"].setShortcut('Ctrl+O')
+        self.menu_actions["Close"].setShortcut('Ctrl+Q')
+        self.menu_actions["Print"].setShortcut('Ctrl+P')
+        self.menu_actions["Save"].setShortcut('Ctrl+S')
+        self.menu_actions["Undo"].setShortcut('Ctrl+U')
 
     def print(self): ##Klikom na Print izbacuje dialog za stampanje
         self.printer = QPrinter(QPrinter.HighResolution)
@@ -172,8 +184,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def print_preview(self, printer): #Pomoc printu
         self.central_widget.print_(printer)
 
-    def button_close(self): #Izbaci prazan dialog kad stisnemo Close.
-
+    #FIXME:Namestiti da klikom 'Yes' izadje iz cele app a ne samo iz dialoga
+    def button_close(self): #Izbaci box dialog kad stisnemo Close.
         self.dlg = QtWidgets.QMessageBox(self)
         self.dlg.setWindowTitle("Upozorenje!")
         self.dlg.setText("Da li sigurno zelite da napustite aplikaciju?")
@@ -194,6 +206,14 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(file_name[0], "r") as fp:
             text_from_file = fp.read()
             self.central_widget.setText(text_from_file)
+
+    #FIXME: Poterbno je omoguciti cuvanje text file
+    def file_save(self): 
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
+        file = open(name,'w')
+        text = self.textEdit.toPlainText()
+        file.write(text)
+        file.close()
 
     def about_action(self):
         """
