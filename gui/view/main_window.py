@@ -1,10 +1,13 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog
+
+from gui.view.workspace import WorkspaceWidget
 from ..view.strukture_dock import StructureDock
 from ..model.document_model import DocumentModel
 from ..model.document import Document
 from ..model.page import Page
 from os.path import abspath
+import sys
 
 
 # FIXME: Raspodeliti nadleznosti na druge view-ove.
@@ -27,6 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.window_menu = QtWidgets.QMenu("Window")
         self.help_menu = QtWidgets.QMenu("Help")
         self.toolbar = QtWidgets.QToolBar("Toolbar", self)
+        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
         self.central_widget = QtWidgets.QTextEdit(self)
         self.statusbar = QtWidgets.QStatusBar(self)
@@ -51,6 +55,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "New file": QtWidgets.QAction(QtGui.QIcon("resources/icons/file.png"), "&New file"),
             "Save": QtWidgets.QAction(QtGui.QIcon("resources/icons/save.png"), "&Save"),
             "Undo": QtWidgets.QAction(QtGui.QIcon("resources/icons/undo.png"), "&Undo"),
+            "Redo": QtWidgets.QAction(QtGui.QIcon("resources/icons/redo.png"), "&Redo"),
             "Delete": QtWidgets.QAction(QtGui.QIcon("resources/icons/delete.png"), "&Delete"),
         }
 
@@ -77,8 +82,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._bind_actions()
         self._bind_shortcuts()
 
-    def _populate_project_dock(self):
-        self.project_dock.tree.clicked.connect(self.read_file)
+    def _populate_project_dock(self):...
     #     self.project_dock.setWidget(QtWidgets.QTreeView(self.project_dock))
     #     # TODO: Primer za file system sadrzaj
     #     model = QtWidgets.QFileSystemModel()
@@ -103,23 +107,32 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         text_editor_wgt = QtWidgets.QTextEdit(self)
         self.setCentralWidget(text_editor_wgt)
-    
+
 
     def _populate_menus(self):
         """
         Privatna metoda koja smesta menije u meni bar.
         """
         self.file_menu.addAction(self.menu_actions["Open"])
+        self.menu_actions["Open"].setStatusTip("Otvorite novi dokument!")
         self.file_menu.addAction(self.menu_actions["Save"])
+        self.menu_actions["Save"].setStatusTip("Sačuvaj dokument!")
+        self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_actions["Print"])
+        self.menu_actions["Print"].setStatusTip("Štampanje dokumenata!")
         self.menubar.addMenu(self.file_menu)
 
         self.edit_menu.addAction(self.menu_actions["Undo"])
+        self.menu_actions["Undo"].setStatusTip("Korak nazad!")
+        self.edit_menu.addSeparator()
         self.edit_menu.addAction(self.menu_actions["Copy"])
+        self.menu_actions["Copy"].setStatusTip("Kopiraj dokument!")
         self.edit_menu.addAction(self.menu_actions["Paste"])
+        self.menu_actions["Paste"].setStatusTip("Nalepi dokument!")
         self.menubar.addMenu(self.edit_menu)
 
         self.window_menu.addAction(self.menu_actions["Close"])
+        self.menu_actions["Close"].setStatusTip("Da li ste sigurni da želite izlazak?")
         toggle_structure_dock_action = self.project_dock.toggleViewAction()
         toggle_toolbar_action = self.toolbar.toggleViewAction()
         self.menubar.addMenu(self.window_menu)
@@ -127,18 +140,26 @@ class MainWindow(QtWidgets.QMainWindow):
         self.window_menu.addAction(toggle_toolbar_action)
 
         self.help_menu.addAction(self.menu_actions["about"])
+        self.menu_actions["about"].setStatusTip("Poruka o nama!")
         self.menubar.addMenu(self.help_menu)
 
     def _populate_toolbar(self):
         self.toolbar.addAction(self.tool_actions["New file"])
+        self.tool_actions["New file"].setStatusTip("Otvori novi dokument!")
         self.toolbar.addSeparator()
         self.toolbar.addAction(self.tool_actions["Save"])
+        self.tool_actions["Save"].setStatusTip("Sačuvaj dokument!")
         self.toolbar.addSeparator()
         self.toolbar.addAction(self.tool_actions["Undo"])
+        self.tool_actions["Undo"].setStatusTip("Korak nazad!")
+        self.toolbar.addAction(self.tool_actions["Redo"])
+        self.tool_actions["Redo"].setStatusTip("Ponovno vraćanje!")
         self.toolbar.addSeparator()
         self.toolbar.addAction(self.tool_actions["Delete"])
+        self.tool_actions["Delete"].setStatusTip("Obriši dokument!")
 
-        self.toolbar1.addAction(self.menu_actions["about"])
+        self.toolbar1.addAction(self.menu_actions["about"])    
+        self.menu_actions["about"].setStatusTip("Poruka o nama!")
 
     def _set_models(self, models=[]):
         """
@@ -156,9 +177,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_actions["about"].triggered.connect(self.about_action)
         self.menu_actions["Open"].triggered.connect(self.on_open)##Pedja dodao
         self.menu_actions["Undo"].triggered.connect(self.central_widget.undo)
+        self.menu_actions["Copy"].triggered.connect(self.central_widget.copy)
+        self.menu_actions["Paste"].triggered.connect(self.central_widget.paste) #FIXME:Uraditi da nalepi na radnu povrsinu
 
         self.tool_actions["New file"].triggered.connect(self.on_open)##Pedja dodao
         self.tool_actions["Undo"].triggered.connect(self.central_widget.undo)
+        self.tool_actions["Redo"].triggered.connect(self.central_widget.redo)
         self.tool_actions["Delete"].triggered.connect(self.central_widget.deleteLater) #Pedja
 
         self.menu_actions["Close"].triggered.connect(self.button_close) #Pedja
@@ -167,12 +191,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_actions["Save"].triggered.connect(self.file_save) #Pedja
 
 
+
     def _bind_shortcuts(self):
         self.menu_actions["Open"].setShortcut('Ctrl+O')
         self.menu_actions["Close"].setShortcut('Ctrl+Q')
         self.menu_actions["Print"].setShortcut('Ctrl+P')
         self.menu_actions["Save"].setShortcut('Ctrl+S')
-        self.menu_actions["Undo"].setShortcut('Ctrl+U')
+        self.menu_actions["Undo"].setShortcut('Ctrl+Z')
+        self.tool_actions["Redo"].setShortcut('Ctrl+Y')
 
     def print(self): ##Klikom na Print izbacuje dialog za stampanje
         self.printer = QPrinter(QPrinter.HighResolution)
@@ -194,6 +220,7 @@ class MainWindow(QtWidgets.QMainWindow):
         button = self.dlg.exec_()
         if button == QtWidgets.QMessageBox.Yes:
             print("Yes!")
+            sys.exit()
         else:
             print("No!")
         
@@ -208,12 +235,16 @@ class MainWindow(QtWidgets.QMainWindow):
             self.central_widget.setText(text_from_file)
 
     #FIXME: Poterbno je omoguciti cuvanje text file
-    def file_save(self): 
-        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
-        file = open(name,'w')
-        text = self.textEdit.toPlainText()
+    def file_save(self): # Izbacuje: TypeError: expected str, bytes or os.PathLike object, not tuple
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save')[0]
+        print(name) # ovaj print je prosao samo prilikom prvog pokretanja i ispisao je tuple: ('', '')
+        # kod svakog narednog pokretanja ga preskace, ali dolazi do file = open(name,'w')
+        file = open(name + ".txt",'w')
+        text = self.central_widget.toPlainText()
+        print(text)
         file.write(text)
         file.close()
+
 
     def about_action(self):
         """
