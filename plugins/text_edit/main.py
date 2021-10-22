@@ -1,11 +1,10 @@
+from plugin_framework.extension import Extension
+from plugin_framework.plugin_specification import PluginSpecification
 import json
-from datetime import datetime
-from plugin_framework.component import Component
-from plugin_framework.component_specification import ComponentSpecification
 
-class Main(Component):
-    def __init__(self, actions, menu, toolbar, widget, specification):
-        super().__init__(actions, menu, toolbar, widget, specification)
+class Main(Extension):
+    def __init__(self, specification, iface):
+        super().__init__(specification,iface)
         if self.specification is None:
             self._load_specification("plugins/text_edit/spec.json")
 
@@ -14,7 +13,39 @@ class Main(Component):
         # FIXME: sta ako putanja ne postoji (nedostaje datoteka) os.path.exists
         with open(path, "r", encoding="utf-8") as jsonfile:
             data = json.load(jsonfile)
-            self.specification = ComponentSpecification(data["version"], data["app_version"], data["author"],
-                data["description"], datetime.strptime(data["creation_date"]), datetime.strptime(data["last_update_date"]),
-                data["licence"], data["name"], data["development_status"])
+            self.specification = PluginSpecification(data["_id"], data["name"], data["authors"],
+                data["version"], data["core_version"], data["category"],
+                data["licence"], data["description"], data["web_page"],  data["dependencies"])
 
+
+
+
+
+
+
+
+
+
+# from plugin_framework.extension import Extension
+# from .widget import TextEdit
+
+# class Plugin(Extension):
+#     def __init__(self, specification, iface):
+#         """
+#         :param iface: main_window aplikacije
+#         """
+#         super().__init__(specification, iface)
+#         self.widget = TextEdit(iface.central_widget)
+#         print("INIT TEST")
+
+#     # FIXME: implementacija apstraktnih metoda
+#     def activate(self):
+#         print("Activated")
+#         self.iface.add_widget(self.widget)
+
+#     def deactivate(self):
+#         print("Deactivated")
+#         self.iface.remove_widget(self.widget)
+
+
+                

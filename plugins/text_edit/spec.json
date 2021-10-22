@@ -1,11 +1,16 @@
 {
-    "version" : "1.0.0",
-    "app_version" : "1.0.0",
-    "author" : "Predrag Radak",
-    "description" : "Opis primera radi",
-    "creation_date" : null,
-    "last_update_date" : null,
-    "licence" : "Tekst licence",
-    "name" : "TeXt edit",
-    "development_status" : "Unfinished"
+    "id": 123456789,
+    "name": "Test",
+    "authors": [{
+        "first_name": "Pedja",
+        "last_name": "Radak",
+        "email": "pedja@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "editor",
+    "licence": "MIT",
+    "description": "Test proba plugin",
+    "web_page": "INVALID URL"
 }

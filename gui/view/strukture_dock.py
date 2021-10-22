@@ -1,6 +1,8 @@
 from PySide2 import QtWidgets, QtCore
 
 class StructureDock(QtWidgets.QDockWidget):
+    kliknut = QtCore.Signal(str) # Atribut klase
+
     def __init__(self, title, parent):
         super().__init__(title, parent)
         self.model = QtWidgets.QFileSystemModel()
@@ -24,12 +26,9 @@ class StructureDock(QtWidgets.QDockWidget):
         
 
     def file_clicked(self, index):
-        self.file_path = self.model.filePath(index)
-        self.data_filepath = self.file_path.replace(".py", ".json")
-        print(self.data_filepath)
-        if(self.main_window.read_file == True): 
-            self.main_window.central_widget()
-        self.main_window.read_file(self.data_filepath)
+        print(self.model.filePath(index))
+        path = self.model.filePath(index)
+        self.kliknut.emit(path)
         #Uzima path i u main windowu otvara novi file sa datim path-om.
 
     def set_root_path(self, path):

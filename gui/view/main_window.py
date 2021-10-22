@@ -38,7 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.project_dock = QtWidgets.QDockWidget("Struktura dokumenta", self)
         self.project_dock = StructureDock("Struktura dokumenta", self)
 
-        # Akcije menija
+        # Akcije menijama   
         # TODO: Dodati i ostale akcije
         self.menu_actions = {
             "Open": QtWidgets.QAction(QtGui.QIcon("resources/icons/create_file.png"), "&Open"),
@@ -90,14 +90,14 @@ class MainWindow(QtWidgets.QMainWindow):
     #     self.project_dock.widget().setModel(model)
     #     self.project_dock.widget().setRootIndex(model.index(QtCore.QDir.currentPath()))
 
-    #FIXME: Najveci problem-Ucitavanje dokumenta iz struk
+    #FIXME: Namesteno,Radi!
     def read_file(self, index):
         path = self.project_dock.model.filePath(index)
         with open(path) as f:
             text = (f.read())
             new_workspace = QtWidgets.QWidget(self.central_widget)
-            self.central_widget.setText(new_workspace, path.split("/")[-1])
-            new_workspace.show_text(text)
+            self.central_widget.setText(text)
+            new_workspace.show()
 
     def _populate_text_widget(self):
         """
@@ -181,6 +181,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_actions["Paste"].triggered.connect(self.central_widget.paste) #FIXME:Uraditi da nalepi na radnu povrsinu
 
         self.tool_actions["New file"].triggered.connect(self.on_open)##Pedja dodao
+        self.tool_actions["Save"].triggered.connect(self.file_save) #Pedja
         self.tool_actions["Undo"].triggered.connect(self.central_widget.undo)
         self.tool_actions["Redo"].triggered.connect(self.central_widget.redo)
         self.tool_actions["Delete"].triggered.connect(self.central_widget.deleteLater) #Pedja
@@ -189,7 +190,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_actions["Print"].triggered.connect(self.print) #Pedja
 
         self.menu_actions["Save"].triggered.connect(self.file_save) #Pedja
-
+        self.project_dock.tree.clicked.connect(self.read_file)
 
 
     def _bind_shortcuts(self):

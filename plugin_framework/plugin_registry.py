@@ -1,23 +1,38 @@
-import importlib
-import inspect
 import os
+import inspect
+import importlib
+import json
+from plugin_framework.plugin_specification import PluginSpecification
 
+# from plugin_framework.plugin_specification import PluginSpecification
 
-class ComponentFramework:
-    def __init__(self, components=[]):
-        self.components = components
+class PluginRegistry:
+    def __init__(self, plugins=[]):
+        self.plugins = plugins
+        self._plugins = plugins
 
-    def add_component(self, component):
+    def install(self, plugins):
         # FIXME: ili dodati samo ako vec nije u komponentama
-        self.components.append(component)
+        self.plugins.append(plugins)
 
-    def remove_component(self, component):
+    def uninstall(self, plugins):
         # FIXME: sta ako nema te komponente u listi?
-        self.components.remove(component)
+        self.plugins.remove(plugins)
 
-    def install_components(self, path="plugins"):
+    def activate(self, _id):
+        for plugin in self._plugins: # plugin # naslednica od extension
+            if _id == plugin.plugin_specification.id:
+                plugin.activate()
+
+
+    def deactivate(self, _id):
+        for plugin in self._plugins: # plugin # naslednica od extension
+            if _id == plugin.plugin_specification.id:
+                plugin.deactivate()
+
+    def install_plugins(self, path="plugins"):
         """
-        Sve komponente nalaze u components folderu, svaka ima svoj zaseban folder, a unjemu
+        Sve komponente nalaze u plugins folderu, svaka ima svoj zaseban folder, a unjemu
         obavezno main.py i spec.EXTENZIJA (bilo koji format datoteke)
         Dinamicko ucitavanje komponenti
         """
@@ -40,5 +55,6 @@ class ComponentFramework:
                                 break
                         if has_main:
                             # TODO: dodati kao ucitani modul
-                            self.components.append(module)
-        print("Broj ucitanih komponeniti:", len(self.components))
+                            self.plugins.append(module)
+        print("Broj ucitanih plugina:", len(self.plugins))
+
