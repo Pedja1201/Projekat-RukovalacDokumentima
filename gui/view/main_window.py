@@ -1,21 +1,19 @@
+import sys
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog
-
-from gui.view.workspace import WorkspaceWidget
 from ..view.strukture_dock import StructureDock
 from ..model.document_model import DocumentModel
 from ..model.document import Document
 from ..model.page import Page
 from os.path import abspath
-import sys
-
+from ..view.dialogs.plugin_dialog import PluginDialog
 
 # FIXME: Raspodeliti nadleznosti na druge view-ove.
 class MainWindow(QtWidgets.QMainWindow):
     """
     Klasa koja predstavlja glavni prozor.
     """
-    def __init__(self, parent=None):
+    def __init__(self, ps, parent=None):
         super().__init__(parent)
         # Podesavanje prozora
         self.setWindowTitle("Rukovalac dokumentima")
@@ -30,15 +28,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.window_menu = QtWidgets.QMenu("Window")
         self.help_menu = QtWidgets.QMenu("Help")
         self.toolbar = QtWidgets.QToolBar("Toolbar", self)
-        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) ##Pazi na conflict
         self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
         self.central_widget = QtWidgets.QTextEdit(self)
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
-        # self.project_dock = QtWidgets.QDockWidget("Struktura dokumenta", self)
         self.project_dock = StructureDock("Struktura dokumenta", self)
+        self.plugin_service = ps
 
-        # Akcije menijama   
+        # Akcije menija
         # TODO: Dodati i ostale akcije
         self.menu_actions = {
             "Open": QtWidgets.QAction(QtGui.QIcon("resources/icons/create_file.png"), "&Open"),
@@ -49,6 +47,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "Paste": QtWidgets.QAction(QtGui.QIcon("resources/icons/paste.png"), "&Paste"),
             "Close": QtWidgets.QAction(QtGui.QIcon("resources/icons/end.png"), "&Close"),
             "about": QtWidgets.QAction(QtGui.QIcon("resources/icons/about.png"), "&About"),
+            "plugin_settings": QtWidgets.QAction(QtGui.QIcon("resources/icons/puzzle.png"), "&Plugin settings")
         }
         #Akcije toolbara
         self.tool_actions = {
@@ -74,7 +73,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # populisanje textWidgeta u centralnom widgetu
         self._populate_text_widget()
         # postavljanje dock widgeta (mozemo ih imati proizvoljan broj)
-        self._populate_project_dock()
         self.setCentralWidget(self.central_widget)
         self.setStatusBar(self.statusbar)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
@@ -82,15 +80,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self._bind_actions()
         self._bind_shortcuts()
 
-    def _populate_project_dock(self):...
-    #     self.project_dock.setWidget(QtWidgets.QTreeView(self.project_dock))
-    #     # TODO: Primer za file system sadrzaj
-    #     model = QtWidgets.QFileSystemModel()
-    #     model.setRootPath(QtCore.QDir.currentPath())
-    #     self.project_dock.widget().setModel(model)
-    #     self.project_dock.widget().setRootIndex(model.index(QtCore.QDir.currentPath()))
+    
 
-    #FIXME: Namesteno,Radi!
     def read_file(self, index):
         path = self.project_dock.model.filePath(index)
         with open(path) as f:
@@ -107,7 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         text_editor_wgt = QtWidgets.QTextEdit(self)
         self.setCentralWidget(text_editor_wgt)
-
+    
 
     def _populate_menus(self):
         """
@@ -117,14 +108,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_actions["Open"].setStatusTip("Otvorite novi dokument!")
         self.file_menu.addAction(self.menu_actions["Save"])
         self.menu_actions["Save"].setStatusTip("Sačuvaj dokument!")
-        self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_actions["Print"])
         self.menu_actions["Print"].setStatusTip("Štampanje dokumenata!")
         self.menubar.addMenu(self.file_menu)
 
         self.edit_menu.addAction(self.menu_actions["Undo"])
         self.menu_actions["Undo"].setStatusTip("Korak nazad!")
-        self.edit_menu.addSeparator()
         self.edit_menu.addAction(self.menu_actions["Copy"])
         self.menu_actions["Copy"].setStatusTip("Kopiraj dokument!")
         self.edit_menu.addAction(self.menu_actions["Paste"])
@@ -142,6 +131,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.help_menu.addAction(self.menu_actions["about"])
         self.menu_actions["about"].setStatusTip("Poruka o nama!")
         self.menubar.addMenu(self.help_menu)
+        self.file_menu.addAction(self.menu_actions["plugin_settings"])
+        #self.tools_menu.addAction(self.action_dict["plugin_settings"])
 
     def _populate_toolbar(self):
         self.toolbar.addAction(self.tool_actions["New file"])
@@ -160,6 +151,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.toolbar1.addAction(self.menu_actions["about"])    
         self.menu_actions["about"].setStatusTip("Poruka o nama!")
+
 
     def _set_models(self, models=[]):
         """
@@ -190,7 +182,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_actions["Print"].triggered.connect(self.print) #Pedja
 
         self.menu_actions["Save"].triggered.connect(self.file_save) #Pedja
-        self.project_dock.tree.clicked.connect(self.read_file)
+
+        self.project_dock.tree.clicked.connect(self.read_file)#Prikaz dokumenta iz strukture dok.
+        self.menu_actions["plugin_settings"].triggered.connect(self.on_open_plugin_settings_dialog)
 
 
     def _bind_shortcuts(self):
@@ -200,6 +194,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_actions["Save"].setShortcut('Ctrl+S')
         self.menu_actions["Undo"].setShortcut('Ctrl+Z')
         self.tool_actions["Redo"].setShortcut('Ctrl+Y')
+        self.menu_actions["plugin_settings"].setShortcut('Ctrl+E') # E kao Extension, posto je Ctrl+P (kao Plugin) zauzeto za Print
+
+    def on_open_plugin_settings_dialog(self):
+        dialog = PluginDialog("Plugin settings", self, self.plugin_service)
+        dialog.exec_()
+
+
 
     def print(self): ##Klikom na Print izbacuje dialog za stampanje
         self.printer = QPrinter(QPrinter.HighResolution)
@@ -236,6 +237,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.central_widget.setText(text_from_file)
 
     #FIXME: Poterbno je omoguciti cuvanje text file
+    #DONE: Omoguceno cuvanje text file-a
     def file_save(self): # Izbacuje: TypeError: expected str, bytes or os.PathLike object, not tuple
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save')[0]
         print(name) # ovaj print je prosao samo prilikom prvog pokretanja i ispisao je tuple: ('', '')
@@ -246,7 +248,6 @@ class MainWindow(QtWidgets.QMainWindow):
         file.write(text)
         file.close()
 
-
     def about_action(self):
         """
         Metoda koja prikazuje informacioni dijalog korisniku o aplikaciji.
@@ -254,3 +255,15 @@ class MainWindow(QtWidgets.QMainWindow):
         msg = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Information, "About Rukovalac dokumentima", "Autori: Studenti Univerziteta Singidunum, Centar Novi Sad.", parent = self)
         msg.addButton(QtWidgets.QMessageBox.Ok)
         msg.exec_()
+    def set_central_widget(self, name: str):
+        # try:
+
+        plugin = self.plugin_service.get_by_name(name)
+        widgets = plugin.get_widget()
+        self.setCentralWidget(widgets[0])
+        if widgets[1] is not None:
+            self.toolbar.addSeparator()
+            self.toolbar.addActions(widgets[1].actions())
+        self.menubar.addMenu(widgets[2]) if widgets[2] is not None else None
+        # except IndexError:
+        #     print("Ne postoji ni jedan plugin sa zadatim simboličkim imenom!")

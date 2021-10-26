@@ -11,6 +11,19 @@ class PluginRegistry:
         self.plugins = plugins
         self._plugins = plugins
 
+
+    def get_by_name(self, name):
+        """
+        Vraca plugin koji ima naziv symbolic_name. Ukoliko se podesi da vise pluginova ima isti symbolic_name, vraca
+        se samo prvi.
+
+        :param symbolic_name: naziv spram kog pretrazujemo sve dostupne pluginove.
+        :type symbolic_name: str
+        :returns: Plugin -- pronadjeni plugin.
+        :raises: IndexError -- ukoliko ne postoji ni jedan plugin koji je zadovoljio filter.
+        """
+        return list(filter(lambda x: x.name == name, self._plugins))[0]
+
     def install(self, plugins):
         # FIXME: ili dodati samo ako vec nije u komponentama
         self.plugins.append(plugins)

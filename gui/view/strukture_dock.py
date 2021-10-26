@@ -1,10 +1,15 @@
 from PySide2 import QtWidgets, QtCore
 
+
 class StructureDock(QtWidgets.QDockWidget):
     kliknut = QtCore.Signal(str) # Atribut klase
 
     def __init__(self, title, parent):
         super().__init__(title, parent)
+
+        # document_path = QtCore.QDir.currentPath()
+        # document_path = document_path[:document_path.rfind('/')] + '/Dokument'
+
         self.model = QtWidgets.QFileSystemModel()
         self.main_window = parent
         # skip = ["*.json"]
@@ -17,11 +22,9 @@ class StructureDock(QtWidgets.QDockWidget):
 
         self.tree = QtWidgets.QTreeView()
         self.tree.setModel(self.model)
-        self.tree.setRootIndex(self.model.index(QtCore.QDir.currentPath() + "/"))
-        
-        self.setWidget(self.tree)
-        self.tree.setRootIndex(self.model.index(QtCore.QDir.currentPath()))
+        self.tree.setRootIndex(self.model.index(QtCore.QDir.currentPath()+"/Dokument"))
         self.tree.clicked.connect(self.file_clicked)
+        self.setWidget(self.tree)
 
         
 

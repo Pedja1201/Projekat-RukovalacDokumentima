@@ -10,7 +10,7 @@ def main():
     # Kreiranje aplikacije
     app = QtWidgets.QApplication(sys.argv)
     # Kreiranje glavnog prozora
-    main_window = MainWindow()
+    main_window = MainWindow(plugin_registry)
     # Prikazivanje - obavezno
     main_window.show()
     # Iskljucivanje interpretera zajedno sa iskljucivanjem aplikacije
