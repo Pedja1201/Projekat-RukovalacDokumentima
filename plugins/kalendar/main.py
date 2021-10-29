@@ -1,15 +1,14 @@
 from plugin_framework.extension import Extension
-from .widgets.contacts_widget import ContactsWidget
 from plugin_framework.plugin_specification import PluginSpecification
-# import json
+import json
+from PySide2 import QtWidgets
+
 
 class Main(Extension):
-    def __init__(self, specification, iface):
-        """
-        :param iface: main_window aplikacije
-        """
-        super().__init__(specification, iface)
-        self.widget = ContactsWidget(iface.central_widget)
+    def __init__(self, specification,iface):
+        super().__init__(specification,iface)
+
+        self.widget = QtWidgets.QCalendarWidget(iface.central_widget)
         # self.name = specification.name
         # self.version = specification.version
         # self.core_version = specification.core_version

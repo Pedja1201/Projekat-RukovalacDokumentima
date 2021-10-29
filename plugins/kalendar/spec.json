@@ -1,6 +1,6 @@
 {
-    "id": 23456789,
-    "name": "Imenik",
+    "id": 123456789,
+    "name": "Kaendar",
     "authors": [{
         "first_name": "Pedja",
         "last_name": "Radak",
@@ -9,8 +9,8 @@
     }],
     "version": "1.0.0",
     "core_version": "1.0.0",
-    "category": "podaci",
+    "category": "page",
     "licence": "MIT",
-    "description": "Imenik sa CRUD operacijama",
+    "description": "Test kalendar",
     "web_page": "INVALID URL"
 }

@@ -24,7 +24,7 @@ class PluginDialog(QtWidgets.QDialog):
         self.resize(600, 400)
 
         self.plugin_service = plugin_service
-        # self.plugin_registry = plugin_registry
+        # self.plugin_service = PluginRegistry(plugins=[])
         # OVO SE ZA SAD PROSLEDJUJU SAMO TEST PLUGINI, morace posle da se direktno iz file-a ucita specifikacija plugina i prosledi ovde
 #         self.plugin_registry = PluginRegistry([{
 #     "id": 123456789,
@@ -77,7 +77,7 @@ class PluginDialog(QtWidgets.QDialog):
 
         self.plugin_options_layout = QtWidgets.QHBoxLayout()
 
-        # self.set_button = QtWidgets.QPushButton(QIcon("resources/icons/insert.webp"), "Set as central")
+        self.set_button = QtWidgets.QPushButton(QIcon("resources/icons/insert.webp"), "Set as central")
         self.install_button = QtWidgets.QPushButton(QIcon("resources/icons/install.png"), "Install")
         self.uninstall_button = QtWidgets.QPushButton(QIcon("resources/icons/minus.png"), "Uninstall")
         self.enable_button = QtWidgets.QPushButton(QIcon("resources/icons/active.png"), "Activate")
@@ -88,7 +88,7 @@ class PluginDialog(QtWidgets.QDialog):
         self.plugins_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
         self.plugins_table.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
 
-        # self.plugin_options_layout.addWidget(self.set_button)
+        self.plugin_options_layout.addWidget(self.set_button)
         self.plugin_options_layout.addWidget(self.install_button)
         self.plugin_options_layout.addWidget(self.uninstall_button)
         self.plugin_options_layout.addWidget(self.enable_button)
@@ -98,7 +98,7 @@ class PluginDialog(QtWidgets.QDialog):
         self.button_box.accepted.connect(self.on_accept)
         self.button_box.rejected.connect(self.on_reject)
 
-        # self.set_button.clicked.connect(self.on_set)
+        self.set_button.clicked.connect(self.on_set)
 
         self._populate_table()
 
@@ -116,8 +116,8 @@ class PluginDialog(QtWidgets.QDialog):
         selected_items = self.plugins_table.selectedItems()
         if len(selected_items) == 0:
             return
-        symbolic_name = selected_items[3].text()
-        self.parent().set_central_widget(symbolic_name)
+        name = selected_items[1].text()
+        self.parent().set_central_widget(name)
         
     def on_accept(self):
         """
@@ -135,32 +135,38 @@ class PluginDialog(QtWidgets.QDialog):
         """
         Populise tabelu metapodacima plugina.
         """
-        self.plugins_table.setColumnCount(5)
+        self.plugins_table.setColumnCount(7)
         self.plugins_table.setHorizontalHeaderLabels(
-            ["Name", "Version", "Description", "Category", "Core version"])
+            ["Name", "Version","Core version", "Description", "Category", "Licence", "Web page"])
         # TODO: list all plugins
         self.plugins_table.setRowCount(len(self.plugin_service.plugins))
         for i, plugin in enumerate(self.plugin_service.plugins):
             name = QtWidgets.QTableWidgetItem(plugin.name)
             version = QtWidgets.QTableWidgetItem(plugin.version)
+            core_version = QtWidgets.QTableWidgetItem(plugin.core_version)
             description = QtWidgets.QTableWidgetItem(plugin.description)
             category = QtWidgets.QTableWidgetItem(plugin.category)
-            core_version = QtWidgets.QTableWidgetItem(plugin.core_version)
-            #enabled = QtWidgets.QTableWidgetItem("Enabled" if plugin.enabled else "Disabled")
+            licence = QtWidgets.QTableWidgetItem(plugin.licence)
+            web_page = QtWidgets.QTableWidgetItem(plugin.web_page)
 
-            # setovanje flag-ova tako da se name, version, description, category, core_version ne mogu menjati od strane korisnika
+            # setovanje flag-ova tako da se name, version, description, category, core_version,licence,web_page ne mogu menjati od strane korisnika
             # tj. nisu editable 
             name.setFlags(name.flags() ^ Qt.ItemIsEditable)
             version.setFlags(version.flags() ^ Qt.ItemIsEditable)
+            core_version.setFlags(core_version.flags() ^ Qt.ItemIsEditable)
             description.setFlags(description.flags() ^ Qt.ItemIsEditable)
             category.setFlags(category.flags() ^ Qt.ItemIsEditable)
-            core_version.setFlags(core_version.flags() ^ Qt.ItemIsEditable)
+            licence.setFlags(licence.flags() ^ Qt.ItemIsEditable)
+            web_page.setFlags(web_page.flags() ^ Qt.ItemIsEditable)
 
-            self.plugins_table.setItem(i, 0, name)
-            self.plugins_table.setItem(i, 1, version)
-            self.plugins_table.setItem(i, 2, description)
-            self.plugins_table.setItem(i, 3, category)
-            self.plugins_table.setItem(i, 4, core_version)
-            #self.plugins_table.setItem(i, 4, enabled)
+            self.plugins_table.setItem(i, 1, name)
+            self.plugins_table.setItem(i, 2, version)
+            self.plugins_table.setItem(i, 3, description)
+            self.plugins_table.setItem(i, 4, category)
+            self.plugins_table.setItem(i, 5, core_version)
+            self.plugins_table.setItem(i, 6, licence)
+            self.plugins_table.setItem(i, 7, web_page)
+
+
 
 

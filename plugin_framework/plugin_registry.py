@@ -4,12 +4,12 @@ import importlib
 import json
 from plugin_framework.plugin_specification import PluginSpecification
 
-# from plugin_framework.plugin_specification import PluginSpecification
 
 class PluginRegistry:
     def __init__(self, plugins=[]):
         self.plugins = plugins
         self._plugins = plugins
+        # self._plugins = list()
 
 
     def get_by_name(self, name):
@@ -26,22 +26,30 @@ class PluginRegistry:
 
     def install(self, plugins):
         # FIXME: ili dodati samo ako vec nije u komponentama
-        self.plugins.append(plugins)
+        exsists = self._check_existing_plugin(plugins.plugin_specification.id)
+        if not exsists:
+            # FIXME: nisu proverene zavisnosti
+            self._plugins.append(plugins)
 
     def uninstall(self, plugins):
         # FIXME: sta ako nema te komponente u listi?
-        self.plugins.remove(plugins)
+        self.deactivate(plugins.plugin_specification.id)
+        self._plugins.remove(plugins)
 
     def activate(self, _id):
-        for plugin in self._plugins: # plugin # naslednica od extension
-            if _id == plugin.plugin_specification.id:
-                plugin.activate()
+        for plugins in self._plugins: # plugin # naslednica od extension
+            if _id == plugins.plugin_specification.id:
+                plugins.activate()
 
 
     def deactivate(self, _id):
-        for plugin in self._plugins: # plugin # naslednica od extension
-            if _id == plugin.plugin_specification.id:
-                plugin.deactivate()
+        for plugins in self._plugins: # plugin # naslednica od extension
+            if _id == plugins.plugin_specification.id:
+                plugins.deactivate()
+    
+    # @property
+    # def plugins(self):
+    #     return self._plugins
 
     def install_plugins(self, path="plugins"):
         """
@@ -70,4 +78,42 @@ class PluginRegistry:
                             # TODO: dodati kao ucitani modul
                             self.plugins.append(module)
         print("Broj ucitanih plugina:", len(self.plugins))
+
+
+    def _check_existing_plugin(self, _id):
+        """
+        Provera da li plugin sa id postoji u listi.
+        """
+        for plugin in self._plugins:
+            if plugin.plugin_specification.id == _id:
+                return True
+        return False
+
+
+
+
+
+
+
+
+
+            # for root, dirs, files in os.walk(path):
+            # for d in dirs:
+            #     d_path = os.path.join(path, d)
+            #     spec_path = os.path.join(d_path, "spec.json")
+            #     plugin_path = os.path.join(d_path, "main").replace(os.path.sep,".")
+            #     if os.path.exists(spec_path):
+            #         with open(spec_path, "r") as fp:
+            #             specification = json.load(fp)
+            #             plugin_module = importlib.import_module(plugin_path)
+            #             found = False
+            #             for member in inspect.getmembers(plugin_module):
+            #                 if member[0] == "Main":
+            #                     inst = plugin_module.Main(specification)
+            #                     print(inst)
+            #                     found = True
+            #                     self._plugins.append(inst)
+            #             if not found:
+            #                 raise ValueError("Main class not found!")
+            # break # ne ulazimo u podfoldere
 
