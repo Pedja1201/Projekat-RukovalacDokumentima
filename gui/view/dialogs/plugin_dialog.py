@@ -1,7 +1,7 @@
 from PySide2 import QtWidgets
 from PySide2.QtGui import QIcon
 from PySide2.QtCore import Qt
-from plugin_framework.plugin_registry import PluginRegistry
+
 
 class PluginDialog(QtWidgets.QDialog):
     """
@@ -116,7 +116,7 @@ class PluginDialog(QtWidgets.QDialog):
         selected_items = self.plugins_table.selectedItems()
         if len(selected_items) == 0:
             return
-        name = selected_items[1].text()
+        name = selected_items[0].text()
         self.parent().set_central_widget(name)
         
     def on_accept(self):
@@ -140,7 +140,9 @@ class PluginDialog(QtWidgets.QDialog):
             ["Name", "Version","Core version", "Description", "Category", "Licence", "Web page"])
         # TODO: list all plugins
         self.plugins_table.setRowCount(len(self.plugin_service.plugins))
+        print(self.plugin_service.plugins)
         for i, plugin in enumerate(self.plugin_service.plugins):
+            print(plugin.specification)
             name = QtWidgets.QTableWidgetItem(plugin.name)
             version = QtWidgets.QTableWidgetItem(plugin.version)
             core_version = QtWidgets.QTableWidgetItem(plugin.core_version)

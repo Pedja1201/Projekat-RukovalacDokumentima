@@ -22,7 +22,7 @@ class Extension(Plugin, ABC):
         """
         Property za dobavljanje imena iz metapodataka specifikacije.
         """
-        return self.plugin_specification.get("name", "kontakt.name")
+        return self.plugin_specification.get("name", "")
 
     @name.setter
     def name(self, value):

@@ -1,0 +1,16 @@
+{
+    "id": 1,
+    "name": "Dark mode",
+    "authors": [{
+        "first_name": "Emma",
+        "last_name": "Sili",
+        "email": "emma.sili.19@singimail.rs",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "plugin",
+    "licence": "MIT",
+    "description": "Plugin za dark mode",
+    "web_page": "INVALID URL"
+}

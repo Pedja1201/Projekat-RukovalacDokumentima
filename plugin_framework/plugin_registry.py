@@ -6,46 +6,46 @@ from plugin_framework.plugin_specification import PluginSpecification
 
 
 class PluginRegistry:
-    def __init__(self, plugins=[]):
+    def __init__(self,iface, plugins=[]):
+        self.iface = iface
         self.plugins = plugins
-        self._plugins = plugins
         # self._plugins = list()
 
 
     def get_by_name(self, name):
         """
-        Vraca plugin koji ima naziv symbolic_name. Ukoliko se podesi da vise pluginova ima isti symbolic_name, vraca
+        Vraca plugin koji ima naziv name. Ukoliko se podesi da vise pluginova ima isti symbolic_name, vraca
         se samo prvi.
 
-        :param symbolic_name: naziv spram kog pretrazujemo sve dostupne pluginove.
-        :type symbolic_name: str
+        :param name: naziv spram kog pretrazujemo sve dostupne pluginove.
+        :type name: str
         :returns: Plugin -- pronadjeni plugin.
         :raises: IndexError -- ukoliko ne postoji ni jedan plugin koji je zadovoljio filter.
         """
-        return list(filter(lambda x: x.name == name, self._plugins))[0]
+        return list(filter(lambda x: x.name == name, self.plugins))[0]
 
-    def install(self, plugins):
+    def install(self, plugin):
         # FIXME: ili dodati samo ako vec nije u komponentama
-        exsists = self._check_existing_plugin(plugins.plugin_specification.id)
+        exsists = self._check_existing_plugin(plugin.plugin_specification.id)
         if not exsists:
             # FIXME: nisu proverene zavisnosti
-            self._plugins.append(plugins)
+            self.plugins.append(plugin)
 
-    def uninstall(self, plugins):
+    def uninstall(self, plugin):
         # FIXME: sta ako nema te komponente u listi?
-        self.deactivate(plugins.plugin_specification.id)
-        self._plugins.remove(plugins)
+        self.deactivate(plugin.plugin_specification.id)
+        self.plugins.remove(plugin)
 
     def activate(self, _id):
-        for plugins in self._plugins: # plugin # naslednica od extension
-            if _id == plugins.plugin_specification.id:
-                plugins.activate()
+        for plugin in self.plugins: # plugin # naslednica od extension
+            if _id == plugin.plugin_specification.id:
+                plugin.activate()
 
 
     def deactivate(self, _id):
-        for plugins in self._plugins: # plugin # naslednica od extension
-            if _id == plugins.plugin_specification.id:
-                plugins.deactivate()
+        for plugin in self.plugins: # plugin # naslednica od extension
+            if _id == plugin.plugin_specification.id:
+                plugin.deactivate()
     
     # @property
     # def plugins(self):
@@ -63,20 +63,25 @@ class PluginRegistry:
                 if os.path.exists(os.path.join(dir_path, "__init__.py")):
                     # Ako postoji za njega znamo da je python paket
                     main_module_path = os.path.join(dir_path, "main.py")
-                    if os.path.exists(main_module_path):
-                        # Mozemo proveriti da li ima jednu klasu Main
-                        module_path = main_module_path.rstrip(".py")
-                        module_python_path = module_path.replace(os.path.sep, ".")
-                        module = importlib.import_module(module_python_path)
-                        class_members = inspect.getmembers(module, inspect.isclass)
-                        has_main = False
-                        for member in class_members:
-                            if member[0] == "Main":
-                                has_main = True
-                                break
-                        if has_main:
-                            # TODO: dodati kao ucitani modul
-                            self.plugins.append(module)
+                    spec_path = os.path.join(dir_path, "spec.json") # specifikacija svakog plugina ce se nalaziti
+            # u ovoj dateoteci
+
+                    data = {}
+                    with open(spec_path) as fp:
+                        data = json.load(fp)
+                    specification = PluginSpecification.from_dict(data)
+                    print(data, specification)
+             
+                    plugin = importlib.import_module(main_module_path.replace(os.path.sep, ".").rstrip(".py"))
+                    class_members = inspect.getmembers(plugin, inspect.isclass)
+                    print(class_members)
+                    if len(class_members) == 1:
+                        plugin = plugin.Extension(specification, self.iface) # unutar modula ce postojati tacno jedna klasa koju cemo
+                        # zvati Plugin
+                            # instalacija plugin-a
+                        self.install(plugin)
+                    else:
+                        raise IndexError("The plugin.py module must contain just one class!")
         print("Broj ucitanih plugina:", len(self.plugins))
 
 
@@ -84,7 +89,7 @@ class PluginRegistry:
         """
         Provera da li plugin sa id postoji u listi.
         """
-        for plugin in self._plugins:
+        for plugin in self.plugins:
             if plugin.plugin_specification.id == _id:
                 return True
         return False

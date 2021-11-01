@@ -1,6 +1,6 @@
 {
-    "id": 23456,
-    "name": "Test",
+    "id": 236789,
+    "name": "Tree",
     "authors": [{
         "first_name": "Pedja",
         "last_name": "Radak",
@@ -9,8 +9,8 @@
     }],
     "version": "1.0.0",
     "core_version": "1.0.0",
-    "category": "editor",
+    "category": "struktura",
     "licence": "MIT",
-    "description": "Test proba plugin",
+    "description": "struktura podataka",
     "web_page": "INVALID URL"
 }

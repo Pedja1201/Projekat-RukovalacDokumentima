@@ -26,3 +26,19 @@ class Main(Extension):
     def deactivate(self):
         print("Deactivated")
         self.iface.remove_widget(self.widget)
+
+
+        
+
+
+# def __init__(self, specification):
+#         super().__init__(specification)
+
+#     def activate(self):
+#         self.do_something()
+
+#     def do_something(self):
+#         print("Hello world from second plugin!")
+
+#     def get_widget(self, parent=None):
+#         return QtWidgets.QCalendarWidget(), None, None
