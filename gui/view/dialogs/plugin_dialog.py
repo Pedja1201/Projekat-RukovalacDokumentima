@@ -1,4 +1,5 @@
 from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtGui import QIcon
 from PySide2.QtCore import Qt
 
@@ -21,64 +22,15 @@ class PluginDialog(QtWidgets.QDialog):
         # podesavanje dijaloga
         super().__init__(parent)
         self.setWindowTitle(title)
-        self.resize(600, 400)
+        self.setWindowIcon(QtGui.QIcon("resources/icons/plugins.png"))
+        self.resize(750, 400)
 
         self.plugin_service = plugin_service
-        # self.plugin_service = PluginRegistry(plugins=[])
-        # OVO SE ZA SAD PROSLEDJUJU SAMO TEST PLUGINI, morace posle da se direktno iz file-a ucita specifikacija plugina i prosledi ovde
-#         self.plugin_registry = PluginRegistry([{
-#     "id": 123456789,
-#     "name": "Demo plugin",
-#     "authors": [{
-#         "first_name": "demo_ime",
-#         "last_name": "demo_prezime",
-#         "email": "demo@mail.com",
-#         "web_page": "INVALID URL"
-#     }],
-#     "version": "1.0.0",
-#     "core_version": "1.0.0",
-#     "category": "demo",
-#     "licence": "DemoLicensa",
-#     "description": "Demonstracija",
-#     "web_page": "INVALID URL"
-# },
-# {
-#     "id": 123456789,
-#     "name": "Demo plugin 2",
-#     "authors": [{
-#         "first_name": "test_ime",
-#         "last_name": "test_prezime",
-#         "email": "test@mail.com",
-#         "web_page": "INVALID URL"
-#     }],
-#     "version": "1.0.0",
-#     "core_version": "1.0.0",
-#     "category": "demo",
-#     "licence": "TestLicensa",
-#     "description": "Demonstracija",
-#     "web_page": "INVALID URL"
-# },
-# {
-#     "id": 123456789,
-#     "name": "Demo plugin n",
-#     "authors": [{
-#         "first_name": "autor_ime",
-#         "last_name": "autor_prezime",
-#         "email": "autor@mail.com",
-#         "web_page": "INVALID URL"
-#     }],
-#     "version": "1.0.0",
-#     "core_version": "1.0.0",
-#     "category": "demo",
-#     "licence": "PluginLicensa",
-#     "description": "Demonstracija",
-#     "web_page": "INVALID URL"
-# }])
-
+     
         self.plugin_options_layout = QtWidgets.QHBoxLayout()
 
         self.set_button = QtWidgets.QPushButton(QIcon("resources/icons/insert.webp"), "Set as central")
-        self.install_button = QtWidgets.QPushButton(QIcon("resources/icons/install.png"), "Install")
+        self.install_button = QtWidgets.QPushButton(QIcon("resources/icons/installing.jpg"), "Install")
         self.uninstall_button = QtWidgets.QPushButton(QIcon("resources/icons/minus.png"), "Uninstall")
         self.enable_button = QtWidgets.QPushButton(QIcon("resources/icons/active.png"), "Activate")
         self.disable_button = QtWidgets.QPushButton(QIcon("resources/icons/deactivate.png"), "Deactivate")
@@ -140,9 +92,7 @@ class PluginDialog(QtWidgets.QDialog):
             ["Name", "Version","Core version", "Description", "Category", "Licence", "Web page"])
         # TODO: list all plugins
         self.plugins_table.setRowCount(len(self.plugin_service.plugins))
-        print(self.plugin_service.plugins)
         for i, plugin in enumerate(self.plugin_service.plugins):
-            print(plugin.specification)
             name = QtWidgets.QTableWidgetItem(plugin.name)
             version = QtWidgets.QTableWidgetItem(plugin.version)
             core_version = QtWidgets.QTableWidgetItem(plugin.core_version)
@@ -161,13 +111,13 @@ class PluginDialog(QtWidgets.QDialog):
             licence.setFlags(licence.flags() ^ Qt.ItemIsEditable)
             web_page.setFlags(web_page.flags() ^ Qt.ItemIsEditable)
 
-            self.plugins_table.setItem(i, 1, name)
-            self.plugins_table.setItem(i, 2, version)
+            self.plugins_table.setItem(i, 0, name)
+            self.plugins_table.setItem(i, 1, version)
+            self.plugins_table.setItem(i, 2, core_version)
             self.plugins_table.setItem(i, 3, description)
             self.plugins_table.setItem(i, 4, category)
-            self.plugins_table.setItem(i, 5, core_version)
-            self.plugins_table.setItem(i, 6, licence)
-            self.plugins_table.setItem(i, 7, web_page)
+            self.plugins_table.setItem(i, 5, licence)
+            self.plugins_table.setItem(i, 6, web_page)
 
 
 

@@ -1,6 +1,6 @@
 from plugin_framework.extension import Extension
 from .widgets.contacts_widget import ContactsWidget
-from plugin_framework.plugin_specification import PluginSpecification
+# from plugin_framework.plugin_specification import PluginSpecification
 # import json
 
 class Main(Extension):

@@ -1,6 +1,6 @@
 {
     "id": 23456,
-    "name": "Test",
+    "name": "Text Edit",
     "authors": [{
         "first_name": "Pedja",
         "last_name": "Radak",
@@ -11,6 +11,6 @@
     "core_version": "1.0.0",
     "category": "editor",
     "licence": "MIT",
-    "description": "Test proba plugin",
+    "description": "Text editor plugin",
     "web_page": "INVALID URL"
 }

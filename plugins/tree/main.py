@@ -8,6 +8,9 @@ class Main(Extension):
     def activate(self):
         self.do_something()
 
+    def deactivate(self):
+        return super().deactivate()
+
     def do_something(self):
         print("Hello world!")
 

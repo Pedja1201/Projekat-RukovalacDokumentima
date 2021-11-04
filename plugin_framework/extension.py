@@ -2,9 +2,9 @@ from abc import ABC
 from plugin_framework.plugin import Plugin
 
 class Extension(Plugin, ABC):
-    def __init__(self, plugin_specification, iface):
+    def __init__(self, plugin_specification):
         self.plugin_specification = plugin_specification
-        self.iface = iface
+        # self.iface = iface
 
     @property
     def _id(self):

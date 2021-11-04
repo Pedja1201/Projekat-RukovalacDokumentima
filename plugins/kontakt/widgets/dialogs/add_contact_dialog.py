@@ -13,6 +13,8 @@ class AddContactDialog(QtWidgets.QDialog):
         """
         super().__init__(parent)
         self.setWindowTitle("Dodaj kontakt")
+        self.setWindowIcon(QtGui.QIcon("resources/icons/addContacts.png"))
+
         self.vbox_layout = QtWidgets.QVBoxLayout()
         self.form_layout = QtWidgets.QFormLayout()
         self.name_input = QtWidgets.QLineEdit(self)

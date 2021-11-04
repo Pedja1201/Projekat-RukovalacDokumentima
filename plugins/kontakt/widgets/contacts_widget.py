@@ -18,10 +18,10 @@ class ContactsWidget(QtWidgets.QWidget):
         super().__init__(parent)
         self.vbox_layout = QtWidgets.QVBoxLayout()
         self.hbox_layout = QtWidgets.QHBoxLayout()
-        self.open_contacts = QtWidgets.QPushButton(QtGui.QIcon("resources/icons/icons8-edit-file-64.png"), "Otvori", self)
-        self.save_contacts = QtWidgets.QPushButton(QtGui.QIcon("resources/icons/save.png"), "Snimi", self)
-        self.add_button = QtWidgets.QPushButton(QtGui.QIcon("resources/icons/start.png"), "Dodaj", self)
-        self.remove_button = QtWidgets.QPushButton(QtGui.QIcon("resources/icons/minus.png"), "Obrisi", self)
+        self.open_contacts = QtWidgets.QPushButton(QtGui.QIcon("resources/icons/otvori_tabelu.png"), "Otvori", self)
+        self.save_contacts = QtWidgets.QPushButton(QtGui.QIcon("resources/icons/snimi.png"), "Snimi", self)
+        self.add_button = QtWidgets.QPushButton(QtGui.QIcon("resources/icons/dodaj.png"), "Dodaj", self)
+        self.remove_button = QtWidgets.QPushButton(QtGui.QIcon("resources/icons/obrisi.png"), "Obrisi", self)
         self.hbox_layout.addWidget(self.open_contacts)
         self.hbox_layout.addWidget(self.save_contacts)
         self.hbox_layout.addWidget(self.add_button)
@@ -59,8 +59,8 @@ class ContactsWidget(QtWidgets.QWidget):
     def _on_open(self):
         """
         Metoda koja se poziva na klik dugmeta open.
-        """
-        path = QtWidgets.QFileDialog.getOpenFileName(self, "Open contacts file", ".", "CSV Files (*.csv)")
+        """                                                     #Namestena putanja da otvara direktno folder gde su kotakti plugina
+        path = QtWidgets.QFileDialog.getOpenFileName(self, "Open contacts file", "plugins/kontakt", "CSV Files (*.csv)")
         self.set_model(ContactsModel(path[0]))
 
     def _on_save(self):

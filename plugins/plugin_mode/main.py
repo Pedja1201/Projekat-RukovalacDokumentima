@@ -8,19 +8,8 @@ from PySide2.QtGui import QPalette, QColor
 
 
 class Main(Extension):
-    def __init__(self, specification, iface):
-        super().__init__(specification,iface)
-        if self.specification is None:
-            self._load_specification("plugins/plugin_mode/spec.json")
-
-    # TODO: dodati metode specificne za komponentu
-    def _load_specification(self, path):
-        # FIXME: sta ako putanja ne postoji (nedostaje datoteka) os.path.exists
-        with open(path, "r", encoding="utf-8") as jsonfile:
-            data = json.load(jsonfile)
-            self.specification = PluginSpecification(data["_id"], data["name"], data["authors"],
-                data["version"], data["core_version"], data["category"],
-                data["licence"], data["description"], data["web_page"],  data["dependencies"])
+    def __init__(self, specification):
+        super().__init__(specification)
         
 
     QApplication.setStyle('Fusion')

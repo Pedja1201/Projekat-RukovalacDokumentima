@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Podesavanje prozora
         self.setWindowTitle("Rukovalac dokumentima")
         self.setWindowIcon(QtGui.QIcon("resources/icons/singi.jpg"))
-        self.resize(640, 480)
+        self.resize(800, 600)
     
 
         # Definisanje delova aplikacije
@@ -255,15 +255,21 @@ class MainWindow(QtWidgets.QMainWindow):
         msg = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Information, "About Rukovalac dokumentima", "Autori: Studenti Univerziteta Singidunum, Centar Novi Sad.", parent = self)
         msg.addButton(QtWidgets.QMessageBox.Ok)
         msg.exec_()
-    # def set_central_widget(self, name: str):
-    #     # try:
+    def set_central_widget(self, name: str):
+        """
+        Podesava centralni widget glavnog prozora, na osnovu simboličkog imena se dobija plugin
+        koji će se smestiti u centralni deo glavnog prozora.
 
-    #     plugin = self.plugin_service.get_by_name(name)
-    #     widgets = plugin.get_widget()
-    #     self.setCentralWidget(widgets[0])
-    #     if widgets[1] is not None:
-    #         self.toolbar.addSeparator()
-    #         self.toolbar.addActions(widgets[1].actions())
-    #     self.menubar.addMenu(widgets[2]) if widgets[2] is not None else None
-    #     # except IndexError:
-    #     #     print("Ne postoji ni jedan plugin sa zadatim simboličkim imenom!")
+        :param symbolic_name: Simbolicko ime plugina koji želimo da instanciramo.
+        """
+        # try:
+
+        plugin = self.plugin_service.get_by_name(name)
+        widgets = plugin.get_widget()
+        self.setCentralWidget(widgets[0])
+        if widgets[1] is not None:
+            self.toolbar.addSeparator()
+            self.toolbar.addActions(widgets[1].actions())
+        self.menubar.addMenu(widgets[2]) if widgets[2] is not None else None
+        # except IndexError:
+        #     print("Ne postoji ni jedan plugin sa zadatim simboličkim imenom!")
