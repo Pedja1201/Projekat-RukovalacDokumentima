@@ -1,0 +1,16 @@
+{
+    "id": 98765432110,
+    "name": "Table",
+    "authors": [{
+        "first_name": "Milan",
+        "last_name": "Selakovic",
+        "email": "milan@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "table",
+    "licence": "MIT",
+    "description": "Tabela plugin",
+    "web_page": "INVALID URL"
+}

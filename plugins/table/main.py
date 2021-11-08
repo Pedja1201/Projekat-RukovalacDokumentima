@@ -1,11 +1,5 @@
 from plugin_framework.extension import Extension
-from plugin_framework.plugin_specification import PluginSpecification
-import json
-from .widget import PluginMode
-
-from PySide2.QtWidgets import *
-from PySide2.QtCore import Slot,Qt
-from PySide2.QtGui import QPalette, QColor
+from PySide2 import QtWidgets
 
 
 class Main(Extension):
@@ -14,6 +8,7 @@ class Main(Extension):
 
     def activate(self):
         self.do_something()
+
     def deactivate(self):
         return super().deactivate()
 
@@ -21,4 +16,4 @@ class Main(Extension):
         print("Hello world!")
 
     def get_widget(self, parent=None):
-        return PluginMode(parent), None, None
+        return QtWidgets.QTableView(), None, None
