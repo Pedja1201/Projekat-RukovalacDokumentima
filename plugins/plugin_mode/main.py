@@ -13,9 +13,12 @@ class Main(Extension):
         super().__init__(specification)
 
     def activate(self):
-        self.do_something()
+        print("Activated")
+        self.plugin_specification.add_widget(self.get_widget)
+
     def deactivate(self):
-        return super().deactivate()
+        print("Deactivated")
+        self.plugin_specification.remove_widget(self.get_widget)
 
     def do_something(self):
         print("Hello world!")

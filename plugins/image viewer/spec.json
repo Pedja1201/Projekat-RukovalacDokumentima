@@ -1,0 +1,16 @@
+{
+    "id": 98765432110,
+    "name": "Graphics View",
+    "authors": [{
+        "first_name": "Milan",
+        "last_name": "Selakovic",
+        "email": "milan@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Graphics",
+    "licence": "MIT",
+    "description": "Graphics View plugin",
+    "web_page": "INVALID URL"
+}

@@ -26,8 +26,8 @@ class Main(Extension):
     # FIXME: implementacija apstraktnih metoda
     def activate(self):
         print("Activated")
-        self.iface.add_widget(self.widget)
+        self.plugin_specification.add_widget(self.get_widget)
 
     def deactivate(self):
         print("Deactivated")
-        self.iface.remove_widget(self.widget)
+        self.plugin_specification.remove_widget(self.get_widget)

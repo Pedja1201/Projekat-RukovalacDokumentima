@@ -1,18 +1,19 @@
 from PySide2 import QtWidgets
 from plugin_framework.extension import Extension
 from PySide2 import QtWidgets
-# from plugin_framework.plugin_specification import PluginSpecification
 from .widget import TextEdit
-import json
 
 class Main(Extension):
     def __init__(self, specification):
         super().__init__(specification)
 
     def activate(self):
-        self.do_something()
+        print("Activated")
+        self.plugin_specification.add_widget(self.get_widget)
+
     def deactivate(self):
-        return super().deactivate()
+        print("Deactivated")
+        self.plugin_specification.remove_widget(self.get_widget)
 
     def do_something(self):
         print("Hello world!")

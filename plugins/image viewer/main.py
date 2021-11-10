@@ -1,7 +1,6 @@
 from plugin_framework.extension import Extension
-# from plugin_framework.plugin_specification import PluginSpecification
-import json
 from PySide2 import QtWidgets
+from .widget import ImageViewer
 
 
 class Main(Extension):
@@ -9,20 +8,15 @@ class Main(Extension):
         super().__init__(specification)
 
     def activate(self):
-        print("Activated")
-        self.plugin_specification.add_widget(self.get_widget)
+        self.do_something()
 
     def deactivate(self):
-        print("Deactivated")
-        self.plugin_specification.remove_widget(self.get_widget)
+        return super().deactivate()
 
     def do_something(self):
         print("Hello world!")
 
     def get_widget(self, parent=None):
-        return QtWidgets.QCalendarWidget(), None, None
-
- 
-
+        return ImageViewer(), None, None
 
 

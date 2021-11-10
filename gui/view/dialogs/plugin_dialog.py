@@ -29,18 +29,17 @@ class PluginDialog(QtWidgets.QDialog):
      
         self.plugin_options_layout = QtWidgets.QHBoxLayout()
 
-        self.set_button = QtWidgets.QPushButton(QIcon("resources/icons/insert.webp"), "Set as central")
         self.install_button = QtWidgets.QPushButton(QIcon("resources/icons/installing.jpg"), "Install")
         self.uninstall_button = QtWidgets.QPushButton(QIcon("resources/icons/minus.png"), "Uninstall")
         self.enable_button = QtWidgets.QPushButton(QIcon("resources/icons/active.png"), "Activate")
         self.disable_button = QtWidgets.QPushButton(QIcon("resources/icons/deactivate.png"), "Deactivate")
+        
         self.plugin_dialog_layout = QtWidgets.QVBoxLayout()
 
         self.plugins_table = QtWidgets.QTableWidget(self)
         self.plugins_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
         self.plugins_table.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
 
-        self.plugin_options_layout.addWidget(self.set_button)
         self.plugin_options_layout.addWidget(self.install_button)
         self.plugin_options_layout.addWidget(self.uninstall_button)
         self.plugin_options_layout.addWidget(self.enable_button)
@@ -50,7 +49,7 @@ class PluginDialog(QtWidgets.QDialog):
         self.button_box.accepted.connect(self.on_accept)
         self.button_box.rejected.connect(self.on_reject)
 
-        self.set_button.clicked.connect(self.on_set)
+        self.enable_button.clicked.connect(self.on_set)
 
         self._populate_table()
 
