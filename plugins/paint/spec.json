@@ -1,0 +1,16 @@
+{
+    "id": 9832110,
+    "name": "Paint editor",
+    "authors": [{
+        "first_name": "Pedja",
+        "last_name": "Radak",
+        "email": "pedja@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "editor",
+    "licence": "MIT",
+    "description": "Paint editor plugin",
+    "web_page": "INVALID URL"
+}

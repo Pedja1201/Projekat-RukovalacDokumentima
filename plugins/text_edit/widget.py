@@ -1,6 +1,6 @@
 from PySide2 import QtWidgets
 from PySide2 import QtWidgets, QtCore, QtGui
-
+from PySide2.QtGui import QIcon, QFont
 
 class TextEdit(QtWidgets.QWidget):
     def __init__(self, parent):
@@ -17,6 +17,7 @@ class TextEdit(QtWidgets.QWidget):
             "Undo": QtWidgets.QAction(QtGui.QIcon("resources/icons/undo.png"), "&Undo"),
             "Redo": QtWidgets.QAction(QtGui.QIcon("resources/icons/redo.png"), "&Redo"),
             "Delete": QtWidgets.QAction(QtGui.QIcon("resources/icons/delete.png"), "&Delete"),
+            "Font": QtWidgets.QAction(QtGui.QIcon("resources/icons/font.png"), "&Font"),
         }
 
 
@@ -34,13 +35,14 @@ class TextEdit(QtWidgets.QWidget):
         self.tool_bar.addSeparator()
         self.tool_bar.addAction(self.tool_actions["Delete"])
         self.tool_actions["Delete"].setStatusTip("Obriši dokument!")
+        self.tool_bar.addAction(self.tool_actions["Font"])
 
         #toolAkcije
         self.tool_actions["Undo"].triggered.connect(self.text_edit.undo)
         self.tool_actions["Redo"].triggered.connect(self.text_edit.redo)
         self.tool_actions["Delete"].triggered.connect(self.text_edit.deleteLater) #Pedja
         self.tool_actions["New file"].triggered.connect(self.on_open) #Pedja
-
+        self.tool_actions["Font"].triggered.connect(self.font_dialog) #Pedja
 
 
 
@@ -60,3 +62,9 @@ class TextEdit(QtWidgets.QWidget):
         with open(file_name[0], "r") as fp:
             text_from_file = fp.read()
             self.text_edit.setText(text_from_file)
+
+    def font_dialog(self):
+        (ok, font) = QtWidgets.QFontDialog.getFont()
+ 
+        if ok:
+            self.text_edit.setFont(font)

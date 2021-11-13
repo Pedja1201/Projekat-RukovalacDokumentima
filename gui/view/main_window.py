@@ -7,6 +7,7 @@ from ..model.document import Document
 from ..model.page import Page
 from os.path import abspath
 from ..view.dialogs.plugin_dialog import PluginDialog
+# from .workspace import WorkspaceWidget 
 
 # FIXME: Raspodeliti nadleznosti na druge view-ove.
 class MainWindow(QtWidgets.QMainWindow):
@@ -30,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.toolbar = QtWidgets.QToolBar("Toolbar", self)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) ##Pazi na conflict
         self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
-        self.central_widget = QtWidgets.QTextEdit(self)
+        self.central_widget = QtWidgets.QTextEdit(self)### Zbog tipa mozemo promeniti u QTabWidget
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
         self.project_dock = StructureDock("Struktura dokumenta", self)
@@ -81,14 +82,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self._bind_shortcuts()
 
     
-
+    #FIXME: Izmeniti za prikaz kolekcije tabova redom.
     def read_file(self, index):
         path = self.project_dock.model.filePath(index)
         with open(path) as f:
             text = (f.read())
-            new_workspace = QtWidgets.QWidget(self.central_widget)
-            self.central_widget.setText(text)
-            new_workspace.show()
+            new_workspace = QtWidgets.QWidget(self.central_widget)  #new_workspace = WorkspaceWidget(self.central_widget)
+            self.central_widget.setText(text)   #self.central_widget.addTab(new_workspace, path.split("/")[-1])
+            new_workspace.show()                #new_workspace.show_text(text)
 
     def _populate_text_widget(self):
         """
