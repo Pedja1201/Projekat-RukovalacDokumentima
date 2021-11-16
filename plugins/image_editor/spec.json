@@ -1,0 +1,16 @@
+{
+    "id": 98765432110,
+    "name": "Image Editor",
+    "authors": [{
+        "first_name": "Milan",
+        "last_name": "Selakovic",
+        "email": "milan@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Editor",
+    "licence": "MIT",
+    "description": "Image editor plugin",
+    "web_page": "INVALID URL"
+}

@@ -43,6 +43,7 @@ class TextEdit(QtWidgets.QWidget):
         self.tool_actions["Delete"].triggered.connect(self.text_edit.deleteLater) #Pedja
         self.tool_actions["New file"].triggered.connect(self.on_open) #Pedja
         self.tool_actions["Font"].triggered.connect(self.font_dialog) #Pedja
+        self.tool_actions["Save"].triggered.connect(self.file_save)
 
 
 
@@ -68,3 +69,12 @@ class TextEdit(QtWidgets.QWidget):
  
         if ok:
             self.text_edit.setFont(font)
+
+    def file_save(self):
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save')[0]
+        print(name) # ovaj print je prosao samo prilikom prvog pokretanja i ispisao je tuple: ('', '')
+        file = open(name + ".txt",'w')
+        text = self.text_edit.toPlainText()
+        print(text)
+        file.write(text)
+        file.close()

@@ -1,6 +1,6 @@
 from plugin_framework.extension import Extension
 from PySide2 import QtWidgets
-from .widget import Paint
+from .widget import ImageEditor
 
 
 class Main(Extension):
@@ -17,6 +17,4 @@ class Main(Extension):
         print("Hello world!")
 
     def get_widget(self, parent=None):
-        return Paint(), None, None
-
-
+        return ImageEditor(), None, None

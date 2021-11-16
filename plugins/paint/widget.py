@@ -3,7 +3,7 @@ from PySide2.QtGui import QIcon, QImage, QPainter, QPen, QBrush
 from PySide2.QtCore import Qt, QPoint
 import sys
 
-class Window(QMainWindow):
+class Paint(QMainWindow):
     def __init__(self):
         super().__init__()
  
