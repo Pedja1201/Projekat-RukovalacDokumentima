@@ -1,6 +1,6 @@
 {
     "id": 98765432110,
-    "name": "Table",
+    "name": "Studenti - tabela",
     "authors": [{
         "first_name": "Milan",
         "last_name": "Selakovic",
@@ -11,6 +11,6 @@
     "core_version": "1.0.0",
     "category": "table",
     "licence": "MIT",
-    "description": "Tabela plugin",
+    "description": "Studenti plugin",
     "web_page": "INVALID URL"
 }

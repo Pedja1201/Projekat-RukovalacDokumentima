@@ -1,13 +1,11 @@
 from plugin_framework.extension import Extension
-from plugins.table.view import View
-from gui.view.main_window import MainWindow
+from PySide2 import QtWidgets
+from .view.workspace import WorkspaceWidget
 
 
 class Main(Extension):
     def __init__(self, specification):
         super().__init__(specification)
-        self.main_window = MainWindow
-        #self.view = View(self.main_window)
 
     def activate(self):
         self.do_something()
@@ -19,6 +17,4 @@ class Main(Extension):
         print("Hello world!")
 
     def get_widget(self, parent=None):
-        return View(self.main_window), None, None
-
-
+        return WorkspaceWidget(parent), None, None

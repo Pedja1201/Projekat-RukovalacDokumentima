@@ -32,6 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) ##Pazi na conflict
         self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
         self.central_widget = QtWidgets.QTextEdit(self)### Zbog tipa mozemo promeniti u QTabWidget
+        # self.workspace = WorkspaceWidget(self) #Workspace-Promenljiva za prikaz tabova
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
         self.project_dock = StructureDock("Struktura dokumenta", self)
@@ -75,6 +76,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self._populate_text_widget()
         # postavljanje dock widgeta (mozemo ih imati proizvoljan broj)
         self.setCentralWidget(self.central_widget)
+        #Workspace- Nova promenljiva workspace za prikaz i uklanjanje tabova
+        # self.central_widget.addTab(self.workspace, "Dokument")  
+        # self.central_widget.setTabsClosable(True)
+        # self.central_widget.tabCloseRequested.connect(self.delete_tab)
+
         self.setStatusBar(self.statusbar)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
         # uvezivanje akcija
@@ -86,7 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def read_file(self, index):
         path = self.project_dock.model.filePath(index)
         with open(path) as f:
-            text = (f.read())
+            text = (f.read())                                       ####Workspace
             new_workspace = QtWidgets.QWidget(self.central_widget)  #new_workspace = WorkspaceWidget(self.central_widget)
             self.central_widget.setText(text)   #self.central_widget.addTab(new_workspace, path.split("/")[-1])
             new_workspace.show()                #new_workspace.show_text(text)
@@ -274,3 +280,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menubar.addMenu(widgets[2]) if widgets[2] is not None else None
         # except IndexError:
         #     print("Ne postoji ni jedan plugin sa zadatim simboličkim imenom!")
+    
+    # ##Workspace
+    # def delete_tab(self,index):
+    #     self.central_widget.removeTab(index)

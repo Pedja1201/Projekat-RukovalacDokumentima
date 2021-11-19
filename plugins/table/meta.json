@@ -1,0 +1,7 @@
+{
+    "tables":[
+        {"name":"Proba_1", "columns":["proba","p1"]},
+        {"name":"Proba_2", "columns":["probaproba","p2"]},
+        {"name":"Proba_3", "columns":["probaprobaprobaproba","p3"]}
+    ]
+}
