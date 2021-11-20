@@ -281,6 +281,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # except IndexError:
         #     print("Ne postoji ni jedan plugin sa zadatim simboličkim imenom!")
     
-    # ##Workspace
+    ##Workspace
     # def delete_tab(self,index):
     #     self.central_widget.removeTab(index)

@@ -1,0 +1,16 @@
+{
+    "id": 120120000,
+    "name": "Multimedia player",
+    "authors": [{
+        "first_name": "Predrag",
+        "last_name": "Radak",
+        "email": "pedja@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Multimedia",
+    "licence": "MIT",
+    "description": "Media player plugin",
+    "web_page": "INVALID URL"
+}
