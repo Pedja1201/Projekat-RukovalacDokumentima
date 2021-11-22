@@ -1,5 +1,7 @@
 from plugin_framework.extension import Extension
-from .widget import TreeWindow
+from PySide2 import QtWidgets
+from .audio import AudioWindow
+
 
 class Main(Extension):
     def __init__(self, specification):
@@ -15,4 +17,4 @@ class Main(Extension):
         print("Hello world!")
 
     def get_widget(self, parent=None):
-        return TreeWindow(), None, None
+        return AudioWindow(), None, None
