@@ -1,6 +1,6 @@
 from plugin_framework.extension import Extension
 from PySide2 import QtWidgets
-from .view.workspace import WorkspaceWidget
+from .delegat.workspace import WorkspaceWidget
 
 
 class Main(Extension):

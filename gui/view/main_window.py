@@ -249,7 +249,7 @@ class MainWindow(QtWidgets.QMainWindow):
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save')[0]
         print(name) # ovaj print je prosao samo prilikom prvog pokretanja i ispisao je tuple: ('', '')
         # kod svakog narednog pokretanja ga preskace, ali dolazi do file = open(name,'w')
-        file = open(name + ".txt",'w')
+        file = open(name + ".",'w')
         text = self.central_widget.toPlainText()
         print(text)
         file.write(text)

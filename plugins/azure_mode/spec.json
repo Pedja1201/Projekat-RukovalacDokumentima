@@ -1,0 +1,16 @@
+{
+    "id": 9876543211010101010,
+    "name": "Azure Mode",
+    "authors": [{
+        "first_name": "Milan",
+        "last_name": "Selakovic",
+        "email": "milan@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Personalization",
+    "licence": "MIT",
+    "description": "Azure Mode plugin",
+    "web_page": "INVALID URL"
+}

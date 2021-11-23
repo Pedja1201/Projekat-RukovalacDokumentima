@@ -1,7 +1,7 @@
 from PySide2 import QtWidgets, QtGui, QtCore
-from ..controller.student import Student
-from ..controller.polozeni_predmet import PolozeniPredmet
-from ..controller.nepolozeni_predmet import NepolozeniPredmet
+from .student import Student
+from .polozeni_predmet import PolozeniPredmet
+from .nepolozeni_predmet import NepolozeniPredmet
 from ..model.student_model import StudentModel
 from ..model.polozeni_predmet_model import PolozeniPredmetModel
 from ..model.nepolozeni_predmet_model import NepolozeniPredmetModel

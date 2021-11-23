@@ -59,7 +59,7 @@ class TextEdit(QtWidgets.QWidget):
         """
         Kreira sistemski dialog za otvaranje fajlova i podesava sadrzaj tekstualnog editora, ucitanim tekstom.
         """
-        file_name = QtWidgets.QFileDialog.getOpenFileName(self, "Open python file", ".", "Python Files (*.py)")
+        file_name = QtWidgets.QFileDialog.getOpenFileName(self, "Open python file", ".")
         with open(file_name[0], "r") as fp:
             text_from_file = fp.read()
             self.text_edit.setText(text_from_file)
