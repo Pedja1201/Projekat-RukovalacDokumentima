@@ -29,7 +29,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.window_menu = QtWidgets.QMenu("Window")
         self.help_menu = QtWidgets.QMenu("Help")
         self.toolbar = QtWidgets.QToolBar("Toolbar", self)
-        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) ##Pazi na conflict
+        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) 
         self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
         self.central_widget = QtWidgets.QTextEdit(self)### Zbog tipa mozemo promeniti u QTabWidget
         # self.workspace = WorkspaceWidget(self) #Workspace-Promenljiva za prikaz tabova
@@ -175,14 +175,14 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         self.menu_actions["about"].triggered.connect(self.about_action)
         self.menu_actions["Open"].triggered.connect(self.on_open)##Pedja dodao
-        self.menu_actions["Undo"].triggered.connect(self.central_widget.undo)
-        self.menu_actions["Copy"].triggered.connect(self.central_widget.copy)
-        self.menu_actions["Paste"].triggered.connect(self.central_widget.paste) #FIXME:Uraditi da nalepi na radnu povrsinu
+        # self.menu_actions["Undo"].triggered.connect(self.central_widget.undo)    #self.menu_actions["Undo"].triggered.connect(self.workspace.main_text.undo)
+        # self.menu_actions["Copy"].triggered.connect(self.central_widget.copy)    #self.menu_actions["Copy"].triggered.connect(self.workspace.main_text.copy)
+        # self.menu_actions["Paste"].triggered.connect(self.central_widget.paste)   #self.menu_actions["Paste"].triggered.connect(self.workspace.main_text.paste)
 
         self.tool_actions["New file"].triggered.connect(self.on_open)##Pedja dodao
         self.tool_actions["Save"].triggered.connect(self.file_save) #Pedja
-        self.tool_actions["Undo"].triggered.connect(self.central_widget.undo)
-        self.tool_actions["Redo"].triggered.connect(self.central_widget.redo)
+        # self.tool_actions["Undo"].triggered.connect(self.central_widget.undo)   #self.tool_actions["Undo"].triggered.connect(self.workspace.main_text.undo)
+        # self.tool_actions["Redo"].triggered.connect(self.central_widget.redo)   #self.tool_actions["Redo"].triggered.connect(self.workspace.main_text.undo)
         self.tool_actions["Delete"].triggered.connect(self.central_widget.deleteLater) #Pedja
 
         self.menu_actions["Close"].triggered.connect(self.button_close) #Pedja
