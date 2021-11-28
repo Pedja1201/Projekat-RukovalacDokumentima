@@ -1,0 +1,16 @@
+{
+    "id": 102937,
+    "name": "UML Designer",
+    "authors": [{
+        "first_name": "Pedja",
+        "last_name": "Radak",
+        "email": "pedja@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "General",
+    "licence": "MIT",
+    "description": "Simple class diagram designer plugin",
+    "web_page": "INVALID URL"
+}

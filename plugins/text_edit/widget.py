@@ -1,6 +1,8 @@
 from PySide2 import QtWidgets
+from PySide2.QtWidgets import  QFileDialog
 from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtGui import QIcon, QFont
+from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog
+from PySide2.QtCore import QFileInfo
 
 class TextEdit(QtWidgets.QWidget):
     def __init__(self, parent):
@@ -9,6 +11,7 @@ class TextEdit(QtWidgets.QWidget):
         self._layout = QtWidgets.QVBoxLayout()
         self.text_edit = QtWidgets.QTextEdit(self)
         self.tool_bar = QtWidgets.QToolBar("Naslov", self)
+        self.newLetter()
     
         #ToolAkcije
         self.tool_actions = {
@@ -18,6 +21,7 @@ class TextEdit(QtWidgets.QWidget):
             "Redo": QtWidgets.QAction(QtGui.QIcon("resources/icons/redo.png"), "&Redo"),
             "Delete": QtWidgets.QAction(QtGui.QIcon("resources/icons/delete.png"), "&Delete"),
             "Font": QtWidgets.QAction(QtGui.QIcon("resources/icons/font.png"), "&Font"),
+            "Export PDF": QtWidgets.QAction(QtGui.QIcon("resources/icons/pdf.png"), "&Export PDF"),
         }
 
 
@@ -36,6 +40,9 @@ class TextEdit(QtWidgets.QWidget):
         self.tool_bar.addAction(self.tool_actions["Delete"])
         self.tool_actions["Delete"].setStatusTip("Obriši dokument!")
         self.tool_bar.addAction(self.tool_actions["Font"])
+        self.tool_actions["Font"].setStatusTip("Odabir font dokumenta!")
+        self.tool_bar.addAction(self.tool_actions["Export PDF"])
+        self.tool_actions["Export PDF"].setStatusTip("Napravi PDF dokument!")
 
         #toolAkcije
         self.tool_actions["Undo"].triggered.connect(self.text_edit.undo)
@@ -44,6 +51,7 @@ class TextEdit(QtWidgets.QWidget):
         self.tool_actions["New file"].triggered.connect(self.on_open) #Pedja
         self.tool_actions["Font"].triggered.connect(self.font_dialog) #Pedja
         self.tool_actions["Save"].triggered.connect(self.file_save)
+        self.tool_actions["Export PDF"].triggered.connect(self.pdf_export)
 
 
 
@@ -78,3 +86,15 @@ class TextEdit(QtWidgets.QWidget):
         print(text)
         file.write(text)
         file.close()
+
+    def pdf_export(self):
+        fn, _ = QFileDialog.getSaveFileName(self, "Export PDF", None, "PDF files (.pdf); All files")
+ 
+        if fn != '':
+ 
+            if QFileInfo(fn).suffix() == "": fn += '.pdf'
+ 
+            printer = QPrinter(QPrinter.HighResolution)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName(fn)
+            self.text_edit.document().print_(printer)
