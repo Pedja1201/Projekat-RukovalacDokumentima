@@ -7,7 +7,7 @@ from ..model.document import Document
 from ..model.page import Page
 from os.path import abspath
 from ..view.dialogs.plugin_dialog import PluginDialog
-# from .workspace import WorkspaceWidget 
+from .workspace import WorkspaceWidget 
 
 # FIXME: Raspodeliti nadleznosti na druge view-ove.
 class MainWindow(QtWidgets.QMainWindow):
@@ -31,8 +31,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.toolbar = QtWidgets.QToolBar("Toolbar", self)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) 
         self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
-        self.central_widget = QtWidgets.QTextEdit(self)### Zbog tipa mozemo promeniti u QTabWidget
-        # self.workspace = WorkspaceWidget(self) #Workspace-Promenljiva za prikaz tabova
+        self.central_widget = QtWidgets.QTabWidget(self)### Zbog tipa mozemo promeniti u QTabWidget
+        self.workspace = WorkspaceWidget(self) #Workspace-Promenljiva za prikaz tabova
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
         self.project_dock = StructureDock("Struktura dokumenta", self)
@@ -77,9 +77,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # postavljanje dock widgeta (mozemo ih imati proizvoljan broj)
         self.setCentralWidget(self.central_widget)
         #Workspace- Nova promenljiva workspace za prikaz i uklanjanje tabova
-        # self.central_widget.addTab(self.workspace, "Dokument")  
-        # self.central_widget.setTabsClosable(True)
-        # self.central_widget.tabCloseRequested.connect(self.delete_tab)
+        self.central_widget.addTab(self.workspace, "Dokument")  
+        self.central_widget.setTabsClosable(True)
+        self.central_widget.tabCloseRequested.connect(self.delete_tab)
 
         self.setStatusBar(self.statusbar)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
@@ -93,9 +93,9 @@ class MainWindow(QtWidgets.QMainWindow):
         path = self.project_dock.model.filePath(index)
         with open(path) as f:
             text = (f.read())                                       ####Workspace
-            new_workspace = QtWidgets.QWidget(self.central_widget)  #new_workspace = WorkspaceWidget(self.central_widget)
-            self.central_widget.setText(text)   #self.central_widget.addTab(new_workspace, path.split("/")[-1])
-            new_workspace.show()                #new_workspace.show_text(text)
+            new_workspace = WorkspaceWidget(self.central_widget)
+            self.central_widget.addTab(new_workspace, path.split("/")[-1])
+            new_workspace.show_text(text)
 
     def _populate_text_widget(self):
         """
@@ -175,14 +175,14 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         self.menu_actions["about"].triggered.connect(self.about_action)
         self.menu_actions["Open"].triggered.connect(self.on_open)##Pedja dodao
-        # self.menu_actions["Undo"].triggered.connect(self.central_widget.undo)    #self.menu_actions["Undo"].triggered.connect(self.workspace.main_text.undo)
-        # self.menu_actions["Copy"].triggered.connect(self.central_widget.copy)    #self.menu_actions["Copy"].triggered.connect(self.workspace.main_text.copy)
-        # self.menu_actions["Paste"].triggered.connect(self.central_widget.paste)   #self.menu_actions["Paste"].triggered.connect(self.workspace.main_text.paste)
+        self.menu_actions["Undo"].triggered.connect(self.workspace.main_text.undo)
+        self.menu_actions["Copy"].triggered.connect(self.workspace.main_text.copy)
+        self.menu_actions["Paste"].triggered.connect(self.workspace.main_text.paste)
 
         self.tool_actions["New file"].triggered.connect(self.on_open)##Pedja dodao
         self.tool_actions["Save"].triggered.connect(self.file_save) #Pedja
-        # self.tool_actions["Undo"].triggered.connect(self.central_widget.undo)   #self.tool_actions["Undo"].triggered.connect(self.workspace.main_text.undo)
-        # self.tool_actions["Redo"].triggered.connect(self.central_widget.redo)   #self.tool_actions["Redo"].triggered.connect(self.workspace.main_text.undo)
+        self.tool_actions["Undo"].triggered.connect(self.workspace.main_text.undo)
+        self.tool_actions["Redo"].triggered.connect(self.workspace.main_text.undo)
         self.tool_actions["Delete"].triggered.connect(self.central_widget.deleteLater) #Pedja
 
         self.menu_actions["Close"].triggered.connect(self.button_close) #Pedja
@@ -249,8 +249,8 @@ class MainWindow(QtWidgets.QMainWindow):
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save')[0]
         print(name) # ovaj print je prosao samo prilikom prvog pokretanja i ispisao je tuple: ('', '')
         # kod svakog narednog pokretanja ga preskace, ali dolazi do file = open(name,'w')
-        file = open(name + ".",'w')
-        text = self.central_widget.toPlainText()
+        file = open(name + ".txt",'w')
+        text = self.workspace.main_text.toPlainText() #Dolazak skroz do unosenja teksta i njegove klase.
         print(text)
         file.write(text)
         file.close()
@@ -262,6 +262,7 @@ class MainWindow(QtWidgets.QMainWindow):
         msg = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Information, "About Rukovalac dokumentima", "Autori: Studenti Univerziteta Singidunum, Centar Novi Sad.", parent = self)
         msg.addButton(QtWidgets.QMessageBox.Ok)
         msg.exec_()
+        
     def set_central_widget(self, name: str):
         """
         Podesava centralni widget glavnog prozora, na osnovu simboličkog imena se dobija plugin
@@ -273,7 +274,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         plugin = self.plugin_service.get_by_name(name)
         widgets = plugin.get_widget()
-        self.setCentralWidget(widgets[0])
+        self.central_widget.addTab(widgets[0], name.split("/")[-1])
         if widgets[1] is not None:
             self.toolbar.addSeparator()
             self.toolbar.addActions(widgets[1].actions())
@@ -282,5 +283,5 @@ class MainWindow(QtWidgets.QMainWindow):
         #     print("Ne postoji ni jedan plugin sa zadatim simboličkim imenom!")
     
     ##Workspace
-    # def delete_tab(self,index):
-    #     self.central_widget.removeTab(index)
+    def delete_tab(self,index):
+        self.central_widget.removeTab(index)
