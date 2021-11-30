@@ -7,7 +7,6 @@ from .text import Text
 from .image import Image
 from .table import Table
 from .video import Video
-from resources import icons
 
 class TreeModel(QtCore.QAbstractItemModel):
     def __init__(self, workspace, parent=None):
@@ -22,7 +21,7 @@ class TreeModel(QtCore.QAbstractItemModel):
             "Slot": QtGui.QIcon("resources\icons\save.png"),
             "Video": QtGui.QIcon("resources\icons\save.png"),
             "Image": QtGui.QIcon("resources\icons\down.png"),
-            "Text": QtGui.QIcon("resources\icons\up.png"),
+            "Text": QtGui.QIcon("resources\icons\copy.png"),
             "Table": QtGui.QIcon("resources\icons\icons8-grid-2-64.png")
         }
         self.dodavanje = 2

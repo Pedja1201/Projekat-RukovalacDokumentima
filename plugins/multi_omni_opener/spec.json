@@ -1,0 +1,16 @@
+{
+    "id": 10101010108765432110101010101010,
+    "name": "Multi Omni Opener",
+    "authors": [{
+        "first_name": "Milan",
+        "last_name": "Selakovic",
+        "email": "milan@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Essential Utility",
+    "licence": "MIT",
+    "description": "Multi Omni Opener plugin",
+    "web_page": "INVALID URL"
+}

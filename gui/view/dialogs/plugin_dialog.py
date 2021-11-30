@@ -50,7 +50,8 @@ class PluginDialog(QtWidgets.QDialog):
         self.button_box.rejected.connect(self.on_reject)
 
         self.enable_button.clicked.connect(self.on_set)
-
+        self.uninstall_button.clicked.connect(self.uninstall) #Brisanje plugina iz tabele!!!
+        
         self._populate_table()
 
         self.plugin_dialog_layout.addLayout(self.plugin_options_layout)
@@ -69,6 +70,9 @@ class PluginDialog(QtWidgets.QDialog):
             return
         name = selected_items[0].text()
         self.parent().set_central_widget(name)
+
+    def uninstall(self):
+        self.plugins_table.removeRow(self.plugins_table.currentIndex().row())
         
     def on_accept(self):
         """

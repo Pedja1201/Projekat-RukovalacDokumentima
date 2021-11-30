@@ -1,0 +1,16 @@
+{
+    "id": 98765432110101010101010,
+    "name": "Gold Mode",
+    "authors": [{
+        "first_name": "Milan",
+        "last_name": "Selakovic",
+        "email": "milan@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Personalization",
+    "licence": "MIT",
+    "description": "Gold Mode plugin",
+    "web_page": "INVALID URL"
+}
