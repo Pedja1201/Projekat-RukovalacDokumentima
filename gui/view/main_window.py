@@ -1,6 +1,7 @@
 import sys
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog
+# from gui.view.dock_widget_tree import DockWidget
 from ..view.strukture_dock import StructureDock
 from ..model.document_model import DocumentModel
 from ..model.document import Document
@@ -36,6 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
         self.project_dock = StructureDock("Struktura dokumenta", self)
+        # self.project_dock = QtWidgets.QDockWidget("Structure document",self)
         self.plugin_service = ps
 
         # Akcije menija
@@ -83,9 +85,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setStatusBar(self.statusbar)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
+        # self.add_dock_widget()
         # uvezivanje akcija
         self._bind_actions()
         self._bind_shortcuts()
+
+
+        #Dodavanje dock widzeta (xml varijanta)
+    # def add_dock_widget(self):#metoda za dodavanje u widgeta, u main.py je plugin_registry i tamo se stavi taj id od vidzeta i poziva kao ostali
+    #     self.widgets = DockWidget(self)
+    #     self.project_dock.setWidget(self.widgets)
+    #     self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
 
     
     #FIXME: Izmeniti za prikaz kolekcije tabova redom.

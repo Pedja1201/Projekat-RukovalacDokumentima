@@ -1,5 +1,6 @@
 from plugin_framework.extension import Extension
 from PySide2 import QtWidgets
+from .widget import StructureDock
 
 
 class Main(Extension):
@@ -7,20 +8,13 @@ class Main(Extension):
         super().__init__(specification)
 
     def activate(self):
-        print("Activated")
-        self.plugin_specification.add_widget(self.get_widget)
+        self.do_something()
 
     def deactivate(self):
-        print("Deactivated")
-        self.plugin_specification.remove_widget(self.get_widget)
+        return super().deactivate()
 
     def do_something(self):
         print("Hello world!")
 
-    def get_widget(self, parent=None):
-        return QtWidgets.QCalendarWidget(), None, None
-
- 
-
-
-
+    def get_widget(self, parent=None, iface=None):
+        return StructureDock(iface), None, None
