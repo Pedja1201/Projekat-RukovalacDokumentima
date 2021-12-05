@@ -1,8 +1,8 @@
 import sys
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog
-# from gui.view.dock_widget_tree import DockWidget
-from ..view.strukture_dock import StructureDock
+from gui.view.dock_widget_tree import DockWidget
+# from ..view.strukture_dock import StructureDock
 from ..model.document_model import DocumentModel
 from ..model.document import Document
 from ..model.page import Page
@@ -36,8 +36,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.workspace = WorkspaceWidget(self) #Workspace-Promenljiva za prikaz tabova
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
-        self.project_dock = StructureDock("Struktura dokumenta", self)
-        # self.project_dock = QtWidgets.QDockWidget("Structure document",self)
+        # self.project_dock = StructureDock("Struktura dokumenta", self)
+        self.project_dock = QtWidgets.QDockWidget("Structure document",self)
         self.plugin_service = ps
 
         # Akcije menija
@@ -84,18 +84,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.tabCloseRequested.connect(self.delete_tab)
 
         self.setStatusBar(self.statusbar)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
-        # self.add_dock_widget()
+        # self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
+        self.add_dock_widget()
         # uvezivanje akcija
         self._bind_actions()
         self._bind_shortcuts()
 
 
         #Dodavanje dock widzeta (xml varijanta)
-    # def add_dock_widget(self):#metoda za dodavanje u widgeta, u main.py je plugin_registry i tamo se stavi taj id od vidzeta i poziva kao ostali
-    #     self.widgets = DockWidget(self)
-    #     self.project_dock.setWidget(self.widgets)
-    #     self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
+    def add_dock_widget(self):#metoda za dodavanje u widgeta, u main.py je plugin_registry i tamo se stavi taj id od vidzeta i poziva kao ostali
+        self.widgets = DockWidget(self)
+        self.project_dock.setWidget(self.widgets)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
+        self.widgets.kliknut.connect(self.read_file)
 
     
     #FIXME: Izmeniti za prikaz kolekcije tabova redom.
@@ -200,7 +201,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.menu_actions["Save"].triggered.connect(self.file_save) #Pedja
 
-        self.project_dock.tree.clicked.connect(self.read_file)#Prikaz dokumenta iz strukture dok.
+        # self.project_dock.tree.clicked.connect(self.read_file)#Prikaz dokumenta iz strukture dok.
         self.menu_actions["plugin_settings"].triggered.connect(self.on_open_plugin_settings_dialog)
 
 

@@ -1,6 +1,6 @@
 {
-    "id": 98765432110,
-    "name": "Proba",
+    "id": 987132110,
+    "name": "Schema",
     "authors": [{
         "first_name": "Pedja",
         "last_name": "Radak",
@@ -9,7 +9,7 @@
     }],
     "version": "1.0.0",
     "core_version": "1.0.0",
-    "category": "proba",
+    "category": "schema",
     "licence": "MIT",
     "description": " plugin",
     "web_page": "INVALID URL"

@@ -1,88 +1,4 @@
-
 from PySide2 import QtCore, QtGui, QtWidgets, QtXml
-
-
-class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
-
-        self.xmlTree = XmlTree()
-        self.setCentralWidget(self.xmlTree)
-
-        self.createActions()
-        self.createMenus()
-
-        self.statusBar().showMessage("Ready")
-
-        self.setWindowTitle("DOM Bookmarks")
-        self.resize(480, 320)
-
-    def open(self):
-        fileName = QtWidgets.QFileDialog.getOpenFileName(self,
-                "Open Bookmark File", QtCore.QDir.currentPath(),
-                "XBEL Files (*.xbel *.xml)")[0]
-
-        if not fileName:
-            return
-
-        inFile = QtCore.QFile(fileName)
-        if not inFile.open(QtCore.QFile.ReadOnly | QtCore.QFile.Text):
-            QtWidgets.QMessageBox.warning(self, "DOM Bookmarks",
-                    "Cannot read file %s:\n%s." % (fileName, inFile.errorString()))
-            return
-
-        if self.xmlTree.read(inFile):
-            self.statusBar().showMessage("File loaded", 2000)
-
-    def saveAs(self):
-        fileName = QtWidgets.QFileDialog.getSaveFileName(self,
-                "Save Bookmark File", QtCore.QDir.currentPath(),
-                "XBEL Files (*.xbel *.xml)")[0]
-
-        if not fileName:
-            return
-
-        outFile = QtCore.QFile(fileName)
-        if not outFile.open(QtCore.QFile.WriteOnly | QtCore.QFile.Text):
-            QtWidgets.QMessageBox.warning(self, "DOM Bookmarks",
-                    "Cannot write file %s:\n%s." % (fileName, outFile.errorString()))
-            return
-
-        if self.xmlTree.write(outFile):
-            self.statusBar().showMessage("File saved", 2000)
-
-    def about(self):
-       QtWidgets.QMessageBox.about(self, "About DOM Bookmarks",
-            "The <b>DOM Bookmarks</b> example demonstrates how to use Qt's "
-            "DOM classes to read and write XML documents.")
-
-    def createActions(self):
-        self.openAct = QtWidgets.QAction("&Open...", self, shortcut="Ctrl+O",
-                triggered=self.open)
-
-        self.saveAsAct = QtWidgets.QAction("&Save As...", self, shortcut="Ctrl+S",
-                triggered=self.saveAs)
-
-        self.exitAct = QtWidgets.QAction("E&xit", self, shortcut="Ctrl+Q",
-                triggered=self.close)
-
-        self.aboutAct = QtWidgets.QAction("&About", self, triggered=self.about)
-
-        self.aboutQtAct = QtWidgets.QAction("About &Qt", self,
-                triggered=QtWidgets.QApplication.aboutQt)
-
-    def createMenus(self):
-        self.fileMenu = self.menuBar().addMenu("&File")
-        self.fileMenu.addAction(self.openAct)
-        self.fileMenu.addAction(self.saveAsAct)
-        self.fileMenu.addAction(self.exitAct)
-
-        self.menuBar().addSeparator()
-
-        self.helpMenu = self.menuBar().addMenu("&Help")
-        self.helpMenu.addAction(self.aboutAct)
-        self.helpMenu.addAction(self.aboutQtAct)
-
 
 class XmlTree(QtWidgets.QTreeWidget):
     def __init__(self, parent=None):
@@ -167,7 +83,7 @@ class XmlTree(QtWidgets.QTreeWidget):
 
         title = element.firstChildElement('slot').text()
         if not title:
-            title = "Repository"
+            title = "Folder"
 
         item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
         item.setIcon(0, self.folderIcon)
@@ -185,7 +101,7 @@ class XmlTree(QtWidgets.QTreeWidget):
 
                 title = child.firstChildElement('slot').text()
                 if not title:
-                    title = "Folder"
+                    title = "Documents"
 
                 childItem.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
                 childItem.setIcon(0, self.bookmarkIcon)

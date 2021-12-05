@@ -1,6 +1,6 @@
 from plugin_framework.extension import Extension
 from PySide2 import QtWidgets
-from .widget import StructureDock
+from .widget import MainWindow
 
 
 class Main(Extension):
@@ -16,5 +16,5 @@ class Main(Extension):
     def do_something(self):
         print("Hello world!")
 
-    def get_widget(self, parent=None, iface=None):
-        return StructureDock(iface), None, None
+    def get_widget(self, parent=None):
+        return MainWindow(), None, None

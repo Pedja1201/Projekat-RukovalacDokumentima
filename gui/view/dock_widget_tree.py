@@ -1,41 +1,95 @@
 from PySide2 import QtWidgets, QtCore
-from .tree_xml import OpenXMLFile
+from ..model.tree_xml import XmlTree
+from PySide2 import QtCore, QtGui, QtWidgets, QtXml
 
-class DockWidget(QtWidgets.QWidget):
-    kliknut = QtCore.Signal(str) # Atribut klase koji nam omogucuje ispis ocitanog fajla u konzoli preko file_clicked metode
-    widget_for=1234
-    def __init__(self, parent):
-        super().__init__(parent)
 
-        self.iface = parent
+class DockWidget(QtWidgets.QMainWindow):
+    kliknut = QtCore.Signal(str)
+    def __init__(self, parent=None):
+        super(DockWidget, self).__init__(parent)
 
-        self.layout = QtWidgets.QVBoxLayout()
-        self.model = QtWidgets.QFileSystemModel()
-        self.model.setRootPath(QtCore.QDir.rootPath())
+        self.xmlTree = XmlTree()
+        self.setCentralWidget(self.xmlTree)
 
-        self.tree = QtWidgets.QTreeView()
-        self.tree.setModel(self.model)
-        self.tree.setRootIndex(self.model.index(QtCore.QDir.currentPath())) #"/gui/view/xml_file"
-        self.tree.clicked.connect(self.populate)
+        self.createActions()
+        self.createMenus()
 
-        self.layout.addWidget(self.tree)
-        self.setLayout(self.layout)
-       
+        self.statusBar().showMessage("Ready")
 
-        
-    # Metoda koja ispisuje path u terminalu klikom na fajl iz strukture dok.
-    def populate(self, index):
-        indexItem = self.model.index(index.row(), 0, index.parent())
-        file = self.model.filePath(indexItem)
+        self.setWindowTitle("Document Collection")
+        self.resize(480, 320)
 
-        if(QtCore.QFileInfo(file).fileName().split(".")[1] == "xml"):
-            fileOpen = open(file, "r").read()
-            OpenXMLFile(self.iface).XMLinTreeView(fileOpen, QtCore.QFileInfo(file).fileName())
-            self.iface.list_view.show()
-            self.iface.text_edit.setText("")
-            self.iface.text_edit.hide()
+        # self.xmlTree.clicked.connect(self.file_clicked)
 
-    def file_clicked(self, index):
-        print(self.model.filePath(index))
-        path = self.model.filePath(index)
-        self.kliknut.emit(path)
+
+    # def file_clicked(self, index):
+    #     print(self.xmlTree.setCurrentIndex(index))
+    #     path = self.xmlTree.setCurrentIndex(index)
+    #     self.kliknut.emit(path)
+
+    def open(self):
+        fileName = QtWidgets.QFileDialog.getOpenFileName(self,
+                "Open Document File", QtCore.QDir.currentPath(),
+                "XBEL Files (*.xbel *.xml)")[0]
+
+        if not fileName:
+            return
+
+        inFile = QtCore.QFile(fileName)
+        if not inFile.open(QtCore.QFile.ReadOnly | QtCore.QFile.Text):
+            QtWidgets.QMessageBox.warning(self, "Document Collection",
+                    "Cannot read file %s:\n%s." % (fileName, inFile.errorString()))
+            return
+
+        if self.xmlTree.read(inFile):
+            self.statusBar().showMessage("File loaded", 2000)
+
+    def saveAs(self):
+        fileName = QtWidgets.QFileDialog.getSaveFileName(self,
+                "Save Document File", QtCore.QDir.currentPath(),
+                "XBEL Files (*.xbel *.xml)")[0]
+
+        if not fileName:
+            return
+
+        outFile = QtCore.QFile(fileName)
+        if not outFile.open(QtCore.QFile.WriteOnly | QtCore.QFile.Text):
+            QtWidgets.QMessageBox.warning(self, "Document Collection",
+                    "Cannot write file %s:\n%s." % (fileName, outFile.errorString()))
+            return
+
+        if self.xmlTree.write(outFile):
+            self.statusBar().showMessage("File saved", 2000)
+
+    def about(self):
+       QtWidgets.QMessageBox.about(self, "About DOM Bookmarks",
+            "The <b>Document Collection</b> example demonstrates how to use Qt's "
+            "Document classes to read and write XML documents.")
+
+    def createActions(self):
+        self.openAct = QtWidgets.QAction(QtGui.QIcon("resources/icons/xml.jpg"),"&Open...", self, shortcut="Ctrl+O",
+                triggered=self.open)
+
+        self.saveAsAct = QtWidgets.QAction(QtGui.QIcon("resources/icons/snimi.png"),"&Save As...", self, shortcut="Ctrl+S",
+                triggered=self.saveAs)
+
+        self.exitAct = QtWidgets.QAction(QtGui.QIcon("resources/icons/exit.jpg"),"E&xit", self, shortcut="Ctrl+Q",
+                triggered=self.close)
+
+        self.aboutAct = QtWidgets.QAction(QtGui.QIcon("resources/icons/search.png"),"&About", self, triggered=self.about)
+
+        self.aboutQtAct = QtWidgets.QAction(QtGui.QIcon("resources/icons/qt.png"),"About &Qt", self,
+                triggered=QtWidgets.QApplication.aboutQt)
+
+    def createMenus(self):
+        self.fileMenu = self.menuBar().addMenu("&File")
+        self.fileMenu.addAction(self.openAct)
+        self.fileMenu.addAction(self.saveAsAct)
+        self.fileMenu.addAction(self.exitAct)
+
+        self.menuBar().addSeparator()
+
+        self.helpMenu = self.menuBar().addMenu("&Help")
+        self.helpMenu.addAction(self.aboutAct)
+        self.helpMenu.addAction(self.aboutQtAct)
+
