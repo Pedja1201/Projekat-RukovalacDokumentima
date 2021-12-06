@@ -81,7 +81,7 @@ class XmlTree(QtWidgets.QTreeWidget):
     def parseFolderElement(self, element, parentItem=None):
         item = self.createItem(element, parentItem)
 
-        title = element.firstChildElement('slot').text()
+        title = element.firstChildElement('name').text()
         if not title:
             title = "Folder"
 
@@ -89,7 +89,7 @@ class XmlTree(QtWidgets.QTreeWidget):
         item.setIcon(0, self.folderIcon)
         item.setText(0, title)
 
-        folded = (element.attribute('name') != 'Repository 1')
+        folded = (element.attribute('name') != 'Collection')
         self.setItemExpanded(item, not folded)
 
         child = element.firstChildElement()
@@ -99,7 +99,7 @@ class XmlTree(QtWidgets.QTreeWidget):
             elif child.tagName() == 'document':
                 childItem = self.createItem(child, item)
 
-                title = child.firstChildElement('slot').text()
+                title = child.firstChildElement('name').text()
                 if not title:
                     title = "Documents"
 

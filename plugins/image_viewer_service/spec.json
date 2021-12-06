@@ -1,0 +1,16 @@
+{
+    "id": 10101010,
+    "name": "Image Viewer Service",
+    "authors": [{
+        "first_name": "Milan",
+        "last_name": "Selakovic",
+        "email": "milan@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Graphics",
+    "licence": "MIT",
+    "description": "Image Viewer Service plugin",
+    "web_page": "INVALID URL"
+}

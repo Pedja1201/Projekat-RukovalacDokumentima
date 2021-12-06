@@ -1,0 +1,16 @@
+{
+    "id": 1010101010101010101010101010,
+    "name": "Element Handler",
+    "authors": [{
+        "first_name": "Milan",
+        "last_name": "Selakovic",
+        "email": "milan@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Essential Utility",
+    "licence": "MIT",
+    "description": "Element Handler plugin",
+    "web_page": "INVALID URL"
+}

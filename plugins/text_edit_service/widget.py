@@ -4,14 +4,12 @@ from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog
 from PySide2.QtCore import QFileInfo
 
-class TextEdit(QtWidgets.QWidget):
+class TextEditService(QtWidgets.QWidget):
     def __init__(self, parent):
         super().__init__(parent)
-        # TODO: Dodati odredjene funkcije za text edit(Bold,font,size....)
         self._layout = QtWidgets.QVBoxLayout()
         self.text_edit = QtWidgets.QTextEdit(self)
         self.tool_bar = QtWidgets.QToolBar("Naslov", self)
-
     
         #ToolAkcije
         self.tool_actions = {
@@ -19,9 +17,9 @@ class TextEdit(QtWidgets.QWidget):
             "Save": QtWidgets.QAction(QtGui.QIcon("resources/icons/save.png"), "&Save"),
             "Undo": QtWidgets.QAction(QtGui.QIcon("resources/icons/undo.png"), "&Undo"),
             "Redo": QtWidgets.QAction(QtGui.QIcon("resources/icons/redo.png"), "&Redo"),
-            "Delete": QtWidgets.QAction(QtGui.QIcon("resources/icons/delete.png"), "&Delete"),
             "Font": QtWidgets.QAction(QtGui.QIcon("resources/icons/font.png"), "&Font"),
-            "Export PDF": QtWidgets.QAction(QtGui.QIcon("resources/icons/pdf.png"), "&Export PDF"),
+            "Delete": QtWidgets.QAction(QtGui.QIcon("resources/icons/delete.png"), "&Delete"),
+            "Export PDF": QtWidgets.QAction(QtGui.QIcon("resources/icons/pdf.png"), "&Export PDF")
         }
 
 
@@ -36,20 +34,20 @@ class TextEdit(QtWidgets.QWidget):
         self.tool_actions["Undo"].setStatusTip("Korak nazad!")
         self.tool_bar.addAction(self.tool_actions["Redo"])
         self.tool_actions["Redo"].setStatusTip("Ponovno vraćanje!")
+        self.tool_bar.addAction(self.tool_actions["Font"])
+        self.tool_actions["Font"].setStatusTip("Prikaz tekstualnog stila!")
         self.tool_bar.addSeparator()
         self.tool_bar.addAction(self.tool_actions["Delete"])
         self.tool_actions["Delete"].setStatusTip("Obriši dokument!")
-        self.tool_bar.addAction(self.tool_actions["Font"])
-        self.tool_actions["Font"].setStatusTip("Odabir font dokumenta!")
         self.tool_bar.addAction(self.tool_actions["Export PDF"])
         self.tool_actions["Export PDF"].setStatusTip("Napravi PDF dokument!")
 
         #toolAkcije
         self.tool_actions["Undo"].triggered.connect(self.text_edit.undo)
         self.tool_actions["Redo"].triggered.connect(self.text_edit.redo)
-        self.tool_actions["Delete"].triggered.connect(self.text_edit.deleteLater) #Pedja
-        self.tool_actions["New file"].triggered.connect(self.on_open) #Pedja
-        self.tool_actions["Font"].triggered.connect(self.font_dialog) #Pedja
+        self.tool_actions["Delete"].triggered.connect(self.text_edit.deleteLater)
+        self.tool_actions["New file"].triggered.connect(self.handle)
+        self.tool_actions["Font"].triggered.connect(self.font_dialog)
         self.tool_actions["Save"].triggered.connect(self.file_save)
         self.tool_actions["Export PDF"].triggered.connect(self.pdf_export)
 
@@ -60,14 +58,12 @@ class TextEdit(QtWidgets.QWidget):
         self._layout.addWidget(self.text_edit)
         
         self.setLayout(self._layout)
-        # u layout dodati toolbar i menubar
-        # sam widget koji je npr. textedit
 
-    def on_open(self):
+    def handle(self):
         """
         Kreira sistemski dialog za otvaranje fajlova i podesava sadrzaj tekstualnog editora, ucitanim tekstom.
         """
-        file_name = QtWidgets.QFileDialog.getOpenFileName(self, "Open python file", ".")
+        file_name = QtWidgets.QFileDialog.getOpenFileName(self)
         with open(file_name[0], "r") as fp:
             text_from_file = fp.read()
             self.text_edit.setText(text_from_file)
@@ -80,13 +76,14 @@ class TextEdit(QtWidgets.QWidget):
 
     def file_save(self):
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save')[0]
-        print(name) # ovaj print je prosao samo prilikom prvog pokretanja i ispisao je tuple: ('', '')
+        print(name)
         file = open(name + ".txt",'w')
         text = self.text_edit.toPlainText()
         print(text)
         file.write(text)
         file.close()
 
+    
     def pdf_export(self):
         fn, _ = QFileDialog.getSaveFileName(self, "Export PDF", None, "PDF files (.pdf); All files")
  
