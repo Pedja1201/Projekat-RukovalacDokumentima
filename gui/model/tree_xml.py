@@ -12,29 +12,29 @@ class XmlTree(QtWidgets.QTreeWidget):
         self.domElementForItem = {}
 
         self.folderIcon = QtGui.QIcon()
-        self.bookmarkIcon = QtGui.QIcon()
+        self.documentIcon = QtGui.QIcon()
 
         self.folderIcon.addPixmap(self.style().standardPixmap(QtWidgets.QStyle.SP_DirClosedIcon),
                 QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.folderIcon.addPixmap(self.style().standardPixmap(QtWidgets.QStyle.SP_DirOpenIcon),
                 QtGui.QIcon.Normal, QtGui.QIcon.On)
-        self.bookmarkIcon.addPixmap(self.style().standardPixmap(QtWidgets.QStyle.SP_FileIcon))
+        self.documentIcon.addPixmap(self.style().standardPixmap(QtWidgets.QStyle.SP_FileIcon))
 
     def read(self, device):
         ok, errorStr, errorLine, errorColumn = self.domDocument.setContent(device, True)
         if not ok:
-            QtWidgets.QMessageBox.information(self.window(), "DOM Bookmarks",
+            QtWidgets.QMessageBox.information(self.window(), "Documents",
                     "Parse error at line %d, column %d:\n%s" % (errorLine, errorColumn, errorStr))
             return False
 
         root = self.domDocument.documentElement()
         if root.tagName() != 'xbel':
-            QtWidgets.QMessageBox.information(self.window(), "DOM Bookmarks",
+            QtWidgets.QMessageBox.information(self.window(), "Documents",
                     "The file is not an XBEL file.")
             return False
         
         elif root.hasAttribute('version') and root.attribute('version') != '1.0':
-            QtWidgets.QMessageBox.information(self.window(), "DOM Bookmarks",
+            QtWidgets.QMessageBox.information(self.window(), "Documents",
                     "The file is not an XBEL version 1.0 file.")
             return False
             
