@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xbel version="1.0">
     <root name="Structure workspace">
-        <dir name="Collection 1" id="repository_1">
+        <dir name="Collection 1" id="collection_1">
             <document name="Document 1" id="document_1_1">
     
             </document>
@@ -12,16 +12,16 @@
             <document name="Document 6" id="dokument_1_6">Primer nekog teksta u dokumentu 6.</document>
         </dir>
 
-        <dir name="Collection 2" id="repository_2">
-            <document name="Document 1" id="document_2_1">Primer nekog teksta u dokumentu 1 kolekcija 2.</document>
-            <document name="Document 2" id="document_2_2">Primer nekog teksta u dokumentu 2 kolekcija 2.</document>
-            <document name="Document 3" id="document_2_3">Primer nekog teksta u dokumentu 3 kolekcija 2.</document>
+        <dir name="Collection 2" id="collection_2">
+            <document name="Document 1" id="collection_2_1">Primer nekog teksta u dokumentu 1 kolekcija 2.</document>
+            <document name="Document 2" id="collection_2_2">Primer nekog teksta u dokumentu 2 kolekcija 2.</document>
+            <document name="Document 3" id="collection_2_3">Primer nekog teksta u dokumentu 3 kolekcija 2.</document>
         </dir>
         
-        <dir name="Collection 3" id="repository_">
-            <document name="Document 1" id="document_3_1">Primer nekog teksta u dokumentu 1 kolekcija 3.</document>
-            <document name="Document 2" id="document_3_2">Primer nekog teksta u dokumentu 2 kolekcija 3.</document>
-            <document name="Document 3" id="document_3_3">Primer nekog teksta u dokumentu 3 kolekcija 3.</document>
+        <dir name="Collection 3" id="collection_3">
+            <document name="Document 1" id="collection_3_1">Primer nekog teksta u dokumentu 1 kolekcija 3.</document>
+            <document name="Document 2" id="collection_3_2">Primer nekog teksta u dokumentu 2 kolekcija 3.</document>
+            <document name="Document 3" id="collection_3_3">Primer nekog teksta u dokumentu 3 kolekcija 3.</document>
         </dir>
     </root>
 </xbel>

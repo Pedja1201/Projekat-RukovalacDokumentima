@@ -11,14 +11,9 @@ class XmlTree(QtWidgets.QTreeWidget):
 
         self.domElementForItem = {}
 
-        self.folderIcon = QtGui.QIcon()
-        self.documentIcon = QtGui.QIcon()
+        self.folderIcon = QtGui.QIcon("resources/icons/file.png")
+        self.documentIcon = QtGui.QIcon("resources/icons/doc.png")
 
-        self.folderIcon.addPixmap(self.style().standardPixmap(QtWidgets.QStyle.SP_DirClosedIcon),
-                QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.folderIcon.addPixmap(self.style().standardPixmap(QtWidgets.QStyle.SP_DirOpenIcon),
-                QtGui.QIcon.Normal, QtGui.QIcon.On)
-        self.documentIcon.addPixmap(self.style().standardPixmap(QtWidgets.QStyle.SP_FileIcon))
 
     def read(self, device):
         ok, errorStr, errorLine, errorColumn = self.domDocument.setContent(device, True)
@@ -89,8 +84,8 @@ class XmlTree(QtWidgets.QTreeWidget):
         item.setIcon(0, self.folderIcon)
         item.setText(0, title)
 
-        folded = (element.attribute('name') != 'Collection')
-        self.setItemExpanded(item, not folded)
+        dir = (element.attribute('name') != 'Collection')
+        self.setItemExpanded(item, not dir)
 
         child = element.firstChildElement()
         while not child.isNull():
@@ -104,7 +99,7 @@ class XmlTree(QtWidgets.QTreeWidget):
                     title = "Documents"
 
                 childItem.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
-                childItem.setIcon(0, self.bookmarkIcon)
+                childItem.setIcon(0, self.documentIcon)
                 childItem.setText(0, title)
                 childItem.setText(1, child.attribute('name'))
             elif child.tagName() == 'separator':

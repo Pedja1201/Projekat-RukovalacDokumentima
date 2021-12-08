@@ -62,7 +62,7 @@ class DockWidget(QtWidgets.QMainWindow):
             self.statusBar().showMessage("File saved", 2000)
 
     def about(self):
-       QtWidgets.QMessageBox.about(self, "About DOM Bookmarks",
+       QtWidgets.QMessageBox.about(self, "About Document",
             "The <b>Document Collection</b> example demonstrates how to use Qt's "
             "Document classes to read and write XML documents.")
 

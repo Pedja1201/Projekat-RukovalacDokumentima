@@ -38,6 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.statusbar.showMessage("Status Bar is Ready!")
         # self.project_dock = StructureDock("Struktura dokumenta", self)
         self.project_dock = QtWidgets.QDockWidget("Structure document",self)
+        self.treeDock = DockWidget(self)
         self.plugin_service = ps
 
         # Akcije menija
@@ -96,12 +97,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.widgets = DockWidget(self)
         self.project_dock.setWidget(self.widgets)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
-        self.widgets.kliknut.connect(self.read_file)
 
     
     #FIXME: Izmeniti za prikaz kolekcije tabova redom.
     def read_file(self, index):
-        path = self.project_dock.model.filePath(index)
+        path = self.treeDock.xmlTree.filePath(index)
         with open(path) as f:
             text = (f.read())                                       ####Workspace
             new_workspace = WorkspaceWidget(self.central_widget)
@@ -201,7 +201,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.menu_actions["Save"].triggered.connect(self.file_save) #Pedja
 
-        # self.project_dock.tree.clicked.connect(self.read_file)#Prikaz dokumenta iz strukture dok.
+        self.treeDock.xmlTree.clicked.connect(self.read_file)#Prikaz dokumenta iz strukture dok.
         self.menu_actions["plugin_settings"].triggered.connect(self.on_open_plugin_settings_dialog)
 
 
@@ -252,7 +252,9 @@ class MainWindow(QtWidgets.QMainWindow):
         file_name = QtWidgets.QFileDialog.getOpenFileName(self, "Open python file", ".", "Python Files (*.py)")
         with open(file_name[0], "r") as fp:
             text_from_file = fp.read()
-            self.central_widget.setText(text_from_file)
+            new_workspace = WorkspaceWidget(self.central_widget)
+            self.central_widget.addTab(new_workspace, file_name("/")[-1])
+            new_workspace.show_text(text_from_file)
 
     #FIXME: Poterbno je omoguciti cuvanje text file
     #DONE: Omoguceno cuvanje text file-a
