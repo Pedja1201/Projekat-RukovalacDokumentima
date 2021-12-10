@@ -11,7 +11,7 @@
             <document name="Document 5" id="dokument_1_5">Primer nekog teksta u dokumentu 5.</document>
             <document name="Document 6" id="dokument_1_6">Primer nekog teksta u dokumentu 6.</document>
         </dir>
-
+        <document name="Document" id="collection">Primer nekog dokumenta u workspace</document>
         <dir name="Collection 2" id="collection_2">
             <document name="Document 1" id="collection_2_1">Primer nekog teksta u dokumentu 1 kolekcija 2.</document>
             <document name="Document 2" id="collection_2_2">Primer nekog teksta u dokumentu 2 kolekcija 2.</document>
@@ -23,5 +23,7 @@
             <document name="Document 2" id="collection_3_2">Primer nekog teksta u dokumentu 2 kolekcija 3.</document>
             <document name="Document 3" id="collection_3_3">Primer nekog teksta u dokumentu 3 kolekcija 3.</document>
         </dir>
+        <document name="Document" id="collection">Primer nekog dokumenta u workspace</document>
+        <document name="Document" id="collection">Primer nekog dokumenta u workspace</document>
     </root>
 </xbel>

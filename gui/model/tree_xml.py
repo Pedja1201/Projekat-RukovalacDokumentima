@@ -78,7 +78,7 @@ class XmlTree(QtWidgets.QTreeWidget):
 
         title = element.firstChildElement('name').text()
         if not title:
-            title = "Folder"
+            title = "Collection"
 
         item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
         item.setIcon(0, self.folderIcon)

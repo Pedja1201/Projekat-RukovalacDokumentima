@@ -19,13 +19,14 @@ class DockWidget(QtWidgets.QMainWindow):
         self.setWindowTitle("Document Collection")
         self.resize(480, 320)
 
-        # self.xmlTree.clicked.connect(self.file_clicked)
+#         self.xmlTree.clicked.connect(self.file_clicked)
 
 
-    # def file_clicked(self, index):
-    #     print(self.xmlTree.setCurrentIndex(index))
-    #     path = self.xmlTree.setCurrentIndex(index)
-    #     self.kliknut.emit(path)
+#     def file_clicked(self, index):
+#         print(self.xmlTree.filePath(index))
+#         print(self.xmlTree.fileName(index))
+#         path = self.xmlTree.filePath(index)
+#         self.kliknut.emit(path)
 
     def open(self):
         fileName = QtWidgets.QFileDialog.getOpenFileName(self,

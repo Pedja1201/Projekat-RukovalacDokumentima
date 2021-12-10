@@ -193,7 +193,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tool_actions["New file"].triggered.connect(self.on_open)##Pedja dodao
         self.tool_actions["Save"].triggered.connect(self.file_save) #Pedja
         self.tool_actions["Undo"].triggered.connect(self.workspace.main_text.undo)
-        self.tool_actions["Redo"].triggered.connect(self.workspace.main_text.undo)
+        self.tool_actions["Redo"].triggered.connect(self.workspace.main_text.redo)
         self.tool_actions["Delete"].triggered.connect(self.central_widget.deleteLater) #Pedja
 
         self.menu_actions["Close"].triggered.connect(self.button_close) #Pedja
@@ -228,7 +228,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.previewDialog.exec_()
 
     def print_preview(self, printer): #Pomoc printu
-        self.central_widget.print_(printer)
+        self.workspace.main_text.print_(printer)
 
     #FIXME:Namestiti da klikom 'Yes' izadje iz cele app a ne samo iz dialoga
     def button_close(self): #Izbaci box dialog kad stisnemo Close.
