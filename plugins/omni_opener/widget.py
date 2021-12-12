@@ -18,7 +18,7 @@ class OmniOpener(QtWidgets.QWidget):
 
         #ToolBar
         self.tool_bar.addAction(self.tool_actions["Open"])
-        self.tool_actions["Open"].setStatusTip("Otvori novi sadrzaj!")
+        self.tool_actions["Open"].setStatusTip("Otvorite novi sadrzaj")
         self.tool_actions["Open"].triggered.connect(self.on_open)
 
         self._layout.addWidget(self.tool_bar)        

@@ -19,6 +19,7 @@ class Main(Extension):
         print("Hello world!")
 
     def get_widget(self, parent=None):
-        return View(self.main_window), None, None
+        #return View(self.main_window), None, None
+        return View(parent = None), None, None
 
 

@@ -1,6 +1,7 @@
 from PySide2 import QtWidgets, QtCore
 from ..model.tree_xml import XmlTree
 from PySide2 import QtCore, QtGui, QtWidgets, QtXml
+# from PyQt5.QtCore import pyqtSignal
 
 
 class DockWidget(QtWidgets.QMainWindow):

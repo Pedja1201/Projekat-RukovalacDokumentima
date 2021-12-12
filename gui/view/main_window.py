@@ -2,7 +2,7 @@ import sys
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from gui.view.dock_widget_tree import DockWidget
-# from ..view.strukture_dock import StructureDock
+from ..view.strukture_dock import StructureDock
 from ..model.document_model import DocumentModel
 from ..model.document import Document
 from ..model.page import Page
@@ -29,6 +29,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.edit_menu = QtWidgets.QMenu("Edit")
         self.window_menu = QtWidgets.QMenu("Window")
         self.help_menu = QtWidgets.QMenu("Help")
+        self.plugin_menu = QtWidgets.QMenu("Plugins")
         self.toolbar = QtWidgets.QToolBar("Toolbar", self)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) 
         self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
@@ -36,8 +37,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.workspace = WorkspaceWidget(self) #Workspace-Promenljiva za prikaz tabova
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
-        # self.project_dock = StructureDock("Struktura dokumenta", self)
-        self.project_dock = QtWidgets.QDockWidget("Structure document",self)
+        self.project_dock = StructureDock("Struktura dokumenta", self)
+        self.xml_dock = QtWidgets.QDockWidget("XML Structure document",self)
         self.treeDock = DockWidget(self)
         self.plugin_service = ps
 
@@ -85,7 +86,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.tabCloseRequested.connect(self.delete_tab)
 
         self.setStatusBar(self.statusbar)
-        # self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
         self.add_dock_widget()
         # uvezivanje akcija
         self._bind_actions()
@@ -95,13 +96,13 @@ class MainWindow(QtWidgets.QMainWindow):
         #Dodavanje dock widzeta (xml varijanta)
     def add_dock_widget(self):#metoda za dodavanje u widgeta, u main.py je plugin_registry i tamo se stavi taj id od vidzeta i poziva kao ostali
         self.widgets = DockWidget(self)
-        self.project_dock.setWidget(self.widgets)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
+        self.xml_dock.setWidget(self.widgets)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.xml_dock)
 
     
     #FIXME: Izmeniti za prikaz kolekcije tabova redom.
     def read_file(self, index):
-        path = self.treeDock.xmlTree.filePath(index)
+        path = self.project_dock.model.filePath(index)
         with open(path) as f:
             text = (f.read())                                       ####Workspace
             new_workspace = WorkspaceWidget(self.central_widget)
@@ -140,17 +141,24 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.window_menu.addAction(self.menu_actions["Close"])
         self.menu_actions["Close"].setStatusTip("Da li ste sigurni da želite izlazak?")
-        toggle_structure_dock_action = self.project_dock.toggleViewAction()
+        toggle_structure_dock_action1 = self.project_dock.toggleViewAction()
+        toggle_structure_dock_action2 = self.xml_dock.toggleViewAction()
         toggle_toolbar_action = self.toolbar.toggleViewAction()
         self.menubar.addMenu(self.window_menu)
-        self.window_menu.addAction(toggle_structure_dock_action)
+        self.window_menu.addAction(toggle_structure_dock_action1)
+        self.window_menu.addAction(toggle_structure_dock_action2)
         self.window_menu.addAction(toggle_toolbar_action)
 
         self.help_menu.addAction(self.menu_actions["about"])
         self.menu_actions["about"].setStatusTip("Poruka o nama!")
         self.menubar.addMenu(self.help_menu)
-        self.file_menu.addAction(self.menu_actions["plugin_settings"])
+        # self.file_menu.addAction(self.menu_actions["plugin_settings"])
         #self.tools_menu.addAction(self.action_dict["plugin_settings"])
+
+        self.plugin_menu.addAction(self.menu_actions["plugin_settings"])
+        self.menu_actions["plugin_settings"].setStatusTip("Otvorite plugin servis!")
+        self.menubar.addMenu(self.plugin_menu)
+
 
     def _populate_toolbar(self):
         self.toolbar.addAction(self.tool_actions["New file"])
@@ -201,7 +209,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.menu_actions["Save"].triggered.connect(self.file_save) #Pedja
 
-        self.treeDock.xmlTree.clicked.connect(self.read_file)#Prikaz dokumenta iz strukture dok.
+        self.project_dock.tree.clicked.connect(self.read_file)#Prikaz dokumenta iz strukture dok.
+        # self.xml_dock.xmletree.clicked.connect(self.read_file)#Prikaz dokumenta iz strukture dok.
         self.menu_actions["plugin_settings"].triggered.connect(self.on_open_plugin_settings_dialog)
 
 
@@ -253,7 +262,7 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(file_name[0], "r") as fp:
             text_from_file = fp.read()
             new_workspace = WorkspaceWidget(self.central_widget)
-            self.central_widget.addTab(new_workspace, file_name("/")[-1])
+            self.central_widget.addTab(new_workspace, file_name[-1])
             new_workspace.show_text(text_from_file)
 
     #FIXME: Poterbno je omoguciti cuvanje text file

@@ -20,7 +20,7 @@ class MultiOmniOpener(QtWidgets.QWidget):
 
         #ToolBar
         self.tool_bar.addAction(self.tool_actions["Add"])
-        self.tool_actions["Add"].setStatusTip("Dodaj novi sadrzaj!")
+        self.tool_actions["Add"].setStatusTip("Dodajte novi sadrzaj")
         self.tool_actions["Add"].triggered.connect(self.on_open)
 
         self._layout.addWidget(self.tool_bar)        
