@@ -1,14 +1,17 @@
 import sys
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog
-from gui.view.dock_widget_tree import DockWidget
+from gui.view.dock_widget_tree import DockWidget  #Beta klasa za otvaranje xml kolekcije dokumenata.
 from ..view.strukture_dock import StructureDock
 from ..model.document_model import DocumentModel
 from ..model.document import Document
 from ..model.page import Page
 from os.path import abspath
-from ..view.dialogs.plugin_dialog import PluginDialog
-from .workspace import WorkspaceWidget 
+from gui.view.dialogs.plugin_dialog import PluginDialog
+from .workspace import WorkspaceWidget ##Ovom klasom bi resili problem tipiziranja 
+                                                #dokumenata tako sto bi je prosledili u 
+                                                #read_file da otvara svaki dokument u poseban tabWidget.
+
 
 # FIXME: Raspodeliti nadleznosti na druge view-ove.
 class MainWindow(QtWidgets.QMainWindow):
@@ -31,15 +34,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.help_menu = QtWidgets.QMenu("Help")
         self.plugin_menu = QtWidgets.QMenu("Plugins")
         self.toolbar = QtWidgets.QToolBar("Toolbar", self)
-        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) 
+        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon) ##Pazi na conflict
         self.toolbar1 = QtWidgets.QToolBar(self)##Drugi toolbar
         self.central_widget = QtWidgets.QTabWidget(self)### Zbog tipa mozemo promeniti u QTabWidget
-        self.workspace = WorkspaceWidget(self) #Workspace-Promenljiva za prikaz tabova
+        self.workspace = WorkspaceWidget(self) #Workspace - Promenljiva za prikaz tabova
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.showMessage("Status Bar is Ready!")
         self.project_dock = StructureDock("Struktura dokumenta", self)
-        self.xml_dock = QtWidgets.QDockWidget("XML Structure document",self)
-        self.treeDock = DockWidget(self)
+        self.xml_dock = QtWidgets.QDockWidget("Documents",self) #FIXME: Otvaranje xml strukture u workspace
         self.plugin_service = ps
 
         # Akcije menija
@@ -80,33 +82,34 @@ class MainWindow(QtWidgets.QMainWindow):
         self._populate_text_widget()
         # postavljanje dock widgeta (mozemo ih imati proizvoljan broj)
         self.setCentralWidget(self.central_widget)
-        #Workspace- Nova promenljiva workspace za prikaz i uklanjanje tabova
-        self.central_widget.addTab(self.workspace, "Dokument")  
+        #Workspace - Nova promenljiva workspace za prikaz i uklanjanje tabova
+        self.central_widget.addTab(self.workspace, "Welcome Page")  
         self.central_widget.setTabsClosable(True)
         self.central_widget.tabCloseRequested.connect(self.delete_tab)
 
         self.setStatusBar(self.statusbar)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.project_dock)
-        self.add_dock_widget()
+        self.add_dock_widget() #Novi DockWidget za xml kolekciju
         # uvezivanje akcija
         self._bind_actions()
         self._bind_shortcuts()
-
 
         #Dodavanje dock widzeta (xml varijanta)
     def add_dock_widget(self):#metoda za dodavanje u widgeta, u main.py je plugin_registry i tamo se stavi taj id od vidzeta i poziva kao ostali
         self.widgets = DockWidget(self)
         self.xml_dock.setWidget(self.widgets)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.xml_dock)
+        self.widgets.kliknut.connect(self.read_file)
 
     
-    #FIXME: Izmeniti za prikaz kolekcije tabova redom.
+
     def read_file(self, index):
         path = self.project_dock.model.filePath(index)
         with open(path) as f:
-            text = (f.read())                                       ####Workspace
+            text = (f.read())                                       #Workspace
             new_workspace = WorkspaceWidget(self.central_widget)
-            self.central_widget.addTab(new_workspace, path.split("/")[-1])
+            # self.central_widget.addTab(new_workspace, path.split("/")[-1])
+            self.central_widget.addTab(new_workspace, "Page"+ "/" + path.split("/")[-1])
             new_workspace.show_text(text)
 
     def _populate_text_widget(self):
@@ -139,6 +142,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_actions["Paste"].setStatusTip("Nalepi dokument!")
         self.menubar.addMenu(self.edit_menu)
 
+
+
         self.window_menu.addAction(self.menu_actions["Close"])
         self.menu_actions["Close"].setStatusTip("Da li ste sigurni da želite izlazak?")
         toggle_structure_dock_action1 = self.project_dock.toggleViewAction()
@@ -158,7 +163,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plugin_menu.addAction(self.menu_actions["plugin_settings"])
         self.menu_actions["plugin_settings"].setStatusTip("Otvorite plugin servis!")
         self.menubar.addMenu(self.plugin_menu)
-
 
     def _populate_toolbar(self):
         self.toolbar.addAction(self.tool_actions["New file"])
@@ -258,7 +262,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         Kreira sistemski dialog za otvaranje fajlova i podesava sadrzaj tekstualnog editora, ucitanim tekstom.
         """
-        file_name = QtWidgets.QFileDialog.getOpenFileName(self, "Open python file", ".", "Python Files (*.py)")
+        file_name = QtWidgets.QFileDialog.getOpenFileName(self, "Open document", ".")
         with open(file_name[0], "r") as fp:
             text_from_file = fp.read()
             new_workspace = WorkspaceWidget(self.central_widget)
@@ -271,7 +275,7 @@ class MainWindow(QtWidgets.QMainWindow):
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save')[0]
         print(name) # ovaj print je prosao samo prilikom prvog pokretanja i ispisao je tuple: ('', '')
         # kod svakog narednog pokretanja ga preskace, ali dolazi do file = open(name,'w')
-        file = open(name + ".txt",'w')
+        file = open(name + ".rudok",'w') #Bez extenzije jer biramo sami kako cemo sacuvati (Default = *.txt)
         text = self.workspace.main_text.toPlainText() #Dolazak skroz do unosenja teksta i njegove klase.
         print(text)
         file.write(text)
@@ -296,14 +300,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         plugin = self.plugin_service.get_by_name(name)
         widgets = plugin.get_widget()
-        self.central_widget.addTab(widgets[0], name.split("/")[-1])
+        # self.central_widget.addTab(widgets[0], name.split("/")[-1])
+        self.central_widget.addTab(widgets[0],  "Page" + "/" + name.split("/")[-1])
         if widgets[1] is not None:
             self.toolbar.addSeparator()
             self.toolbar.addActions(widgets[1].actions())
         self.menubar.addMenu(widgets[2]) if widgets[2] is not None else None
         # except IndexError:
         #     print("Ne postoji ni jedan plugin sa zadatim simboličkim imenom!")
-    
+
     ##Workspace
     def delete_tab(self,index):
         self.central_widget.removeTab(index)

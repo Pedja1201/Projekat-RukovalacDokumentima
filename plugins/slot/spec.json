@@ -1,0 +1,16 @@
+{
+    "id": 3345678,
+    "name": "Slot",
+    "authors": [{
+        "first_name": "Pedja",
+        "last_name": "Radak",
+        "email": "pedja@mail.com",
+        "web_page": "INVALID URL"
+    }],
+    "version": "1.0.0",
+    "core_version": "1.0.0",
+    "category": "Slot",
+    "licence": "MIT",
+    "description": "Test slot",
+    "web_page": "INVALID URL"
+}

@@ -1,0 +1,14 @@
+1.) Stastaviti dokumentaciju u Word-u!(Copy-Paste iz 'DokumentacijaProjekta')
+2.) Krenuti sa Modelom u Astahu.
+3.) MenuBar dopuni.
+4.) Grane namenje za svakog clana tima i podizanje izmena na istu.
+5.) Centralni widget za pocetak ce biti TextEdit.
+6.) Struktura dokumenata sa leve strane sa kolekcijom.
+7.) Plugin framework komponente uraditi (Kao i astah projekat)
+8.) Povezati json fajlove sa Modelom
+9.) Uradjene sitne funkcionalnosti: Open, Print, Delete, Undo, About, Toggle za meni i tulbar
+10.) Uradjena funkcija za Cuvanje dokumenata.
+11.) Uradjeno ucitavanje dokumenata iz strukture.
+12.) Uradjen plugin dialog(Ocitava sve pluginove i prikazuje ih u vidu tabele)
+13.) Dinamicko ocitavanje pluginova(Install) u plugin registry i property za atribute u extension.
+14.) Uradjeni primeri plugin-ova(Kalendar, text edit, tree,plugin mode, kontakt,ImageViewer,Paint,Table)
